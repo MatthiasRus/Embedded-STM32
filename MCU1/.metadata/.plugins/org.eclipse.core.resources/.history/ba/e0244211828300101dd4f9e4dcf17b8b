@@ -1,0 +1,80 @@
+/*
+ * stm32l476xx.h
+ *
+ *  Created on: Aug 27, 2025
+ *      Author: matth_ik1hap6
+ */
+#include <stdint.h>
+#ifndef INC_STM32L476XX_H_
+#define INC_STM32L476XX_H_
+#endif /* INC_STM32L476XX_H_ */
+
+#define __vo    								volatile
+
+#define FLASH_BASE_ADDR              			0x08000000U		// Main memory address
+#define SRAM1_BASE_ADDR				 			0x20000000U		// SRAM1 Embedded Memory
+#define SRAM2_BASE_ADDR							0x20018000U		// SRAM2 = SRAM1   +   96kb * 1024
+#define ROM_BASE_ADDR                			0x1FFF0000U		// System Memory address
+#define SRAM						 			SRAM1_BASE_ADDR
+
+
+#define PERIPH_BASE 							0x40000000U
+#define AHB1_PERIPH_BASE_ADDR					0x40020000U
+#define AHB2_PERIPH_BASE_ADDR					0x48000000U
+#define APB1_PERIPH_BASE_ADDR					PERIPH_BASE
+#define APB2_PERIPH_BASE_ADDR					0x40010000U
+
+
+/* GPIO PERIPHERAL ADDRESSES*/
+
+#define GPIOA_BASE_ADDR 						(AHB2_PERIPH_BASE_ADDR + 0x0000)
+#define GPIOB_BASE_ADDR 						(AHB2_PERIPH_BASE_ADDR + 0x0400)
+#define GPIOC_BASE_ADDR 						(AHB2_PERIPH_BASE_ADDR + 0x0800)
+#define GPIOD_BASE_ADDR 						(AHB2_PERIPH_BASE_ADDR + 0x0C00)
+#define GPIOE_BASE_ADDR 						(AHB2_PERIPH_BASE_ADDR + 0x1000)
+#define GPIOF_BASE_ADDR 						(AHB2_PERIPH_BASE_ADDR + 0x1400)
+#define GPIOG_BASE_ADDR 						(AHB2_PERIPH_BASE_ADDR + 0x1800)
+#define GPIOH_BASE_ADDR 						(AHB2_PERIPH_BASE_ADDR + 0x1C00)
+
+
+/* APB1 BASED PERIPHERAL ADDRESSES */
+
+#define SPI2_BASE_ADDR							(APB1_PERIPH_BASE_ADDR + 0X3800)
+#define SPI3_BASE_ADDR							(APB1_PERIPH_BASE_ADDR + 0X3C00)
+
+#define USART2_BASE_ADDR						(APB1_PERIPH_BASE_ADDR + 0X4400)
+#define USART3_BASE_ADDR						(APB1_PERIPH_BASE_ADDR + 0X4800)
+
+#define UART4_BASE_ADDR							(APB1_PERIPH_BASE_ADDR + 0X4C00)
+#define UART5_BASE_ADDR							(APB1_PERIPH_BASE_ADDR + 0X5000)
+
+#define I2C1_BASE_ADDR							(APB1_PERIPH_BASE_ADDR + 0X5400)
+#define I2C2_BASE_ADDR							(APB1_PERIPH_BASE_ADDR + 0X5800)
+#define I2C3_BASE_ADDR							(APB1_PERIPH_BASE_ADDR + 0X5C00)
+
+
+/*  APB2 BASED PERIPHERAL ADDRESSES */
+
+#define EXTI_BASE_ADDR							(APB2_PERIPH_BASE_ADDR + 0X0400)
+#define SPI1_BASE_ADDR							(APB2_PERIPH_BASE_ADDR + 0X3000)
+#define USART1_BASE_ADDR						(APB2_PERIPH_BASE_ADDR + 0X3800)
+#define SYSCFG_BASE_ADDR						(APB2_PERIPH_BASE_ADDR + 0X0000)
+
+
+/* ---------------------peripheral register definition structures------------------------*/
+
+typedef struct{
+				__vo uint32_t MODER;			//	GPIO port mode register
+				__vo uint32_t OTYPER;			//	GPIO port output type register
+				__vo uint32_t OSPEEDR;			//	GPIO port output speed register
+				__vo uint32_t PUPDR;			//	GPIO port pull-up/pull-down register
+				__vo uint32_t IDR;				//	GPIO port input data register
+				__vo uint32_t ODR;				//	GPIO port output data register
+				__vo uint32_t BSRR;				//	GPIO port bit set/reset register
+				__vo uint32_t LCKR;				//	GPIO port configuration lock register
+				__vo uint32_t AFR[2];			//	GPIO alternate function LOW (0X20) & HIGH (0X24) register
+				__vo uint32_t BRR;		 		//	GPIO port bit reset register
+				__vo uint32_t ASCR;       		//	GPIO port analog switch control register
+}GPIO_RegDef_t;
+
+

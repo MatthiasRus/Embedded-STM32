@@ -1,0 +1,129 @@
+/*
+ * stm32l476xx_gpio_driver.c
+ *
+ *  Created on: Aug 28, 2025
+ *      Author: matth_ik1hap6
+ */
+
+
+#include "stm32l476xx_gpio_driver.h"
+
+
+/*----------------------------- peripheral clock setup-------------------------*/
+/*
+ * @ fn Peripheral Clock Setup Control
+ *
+ * @ brief Enable or Disable the clock for the Given GPIO Port
+ *
+ * @ param1[in] - GPIOx peripheral base Address
+ *
+ * @param2[in] - ENABLE or DISABLE the Clock
+ *
+ * return - NONE
+ *
+ *
+ * */
+void GPIO_Periph_ClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi){
+
+		if (EnorDi == ENABLE) {
+			if (pGPIOx == GPIOA){
+				GPIOA_PCLK_EN();
+			}else if(pGPIOx == GPIOB){
+				GPIOB_PCLK_EN();
+			}else if(pGPIOx == GPIOC){
+				GPIOC_PCLK_EN();
+			}else if(pGPIOx == GPIOD){
+				GPIOD_PCLK_EN();
+			}else if(pGPIOx == GPIOE){
+				GPIOE_PCLK_EN();
+			}else if(pGPIOx == GPIOF){
+				GPIOF_PCLK_EN();
+			}else if(pGPIOx == GPIOG){
+				GPIOG_PCLK_EN();
+			}else if(pGPIOx == GPIOH){
+				GPIOH_PCLK_EN();
+			}
+		}else{
+			if (pGPIOx == GPIOA){
+					GPIOA_PCLK_DI();
+				}else if(pGPIOx == GPIOB){
+							GPIOB_PCLK_DI();
+				}else if(pGPIOx == GPIOC){
+							GPIOC_PCLK_DI();
+				}else if(pGPIOx == GPIOD){
+							GPIOD_PCLK_DI();
+				}else if(pGPIOx == GPIOE){
+							GPIOE_PCLK_DI();
+				}else if(pGPIOx == GPIOF){
+							GPIOF_PCLK_DI();
+				}else if(pGPIOx == GPIOG){
+							GPIOG_PCLK_DI();
+				}else if(pGPIOx == GPIOH){
+							GPIOH_PCLK_DI();
+				}
+		}
+}
+
+/*------------------------------gpio initialization and de-initialization------*/
+/*
+ * @ fn GPIO_Init
+ *
+ * @ brief Enable  the Given GPIO Port
+ *
+ * @ param1[in] - GPIOx peripheral base Address
+ *
+ * return - NONE
+ *
+ *
+ * */
+
+void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
+	// gpio mode
+
+	// gpio speed
+
+	// gpio PuPd
+
+	// gpio OType
+
+	// gpio alternating functionality
+
+
+}
+
+void GPIO_DeInit(GPIO_RegDef_t *pGPIOx){
+	// AHB1 Peripheral clock Reset in one go
+
+}
+
+/*------------------------------Reading and Writing-----------------------------*/
+
+uint8_t GPIO_ReadFromInputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber){
+
+}
+
+uint16_t GPIO_ReadFromInputPort(GPIO_RegDef_t *pGPIOx){
+
+}
+
+void GPIO_WriteToOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t value){
+
+}
+
+void GPIO_WriteToOutputPort(GPIO_RegDef_t *pGPIOx, uint16_t value){
+
+}
+
+void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber){
+
+}
+
+/*------------------------------IRQ and ISR Handling-----------------------------*/
+
+void GPIO_IRQConfig(uint8_t IRQNumber, uint8_t IRQPriority, uint8_t ENRD){
+
+}
+
+void GPIO_IRQHandler(uint8_t PinNumber){
+
+}

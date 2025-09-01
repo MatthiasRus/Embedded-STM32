@@ -1,0 +1,29 @@
+/*
+ * stm32l476xx_gpio_driver.h
+ *
+ *  Created on: Aug 28, 2025
+ *      Author: matth_ik1hap6
+ */
+
+#ifndef INC_STM32L476XX_GPIO_DRIVER_H_
+#define INC_STM32L476XX_GPIO_DRIVER_H_
+
+#include "stm32l476xx.h"
+
+typedef struct{
+
+	uint8_t GPIO_PinNumber;
+	uint8_t GPIO_PinMode;
+	uint8_t GPIO_PinSpeed;
+	uint8_t GPIO_PinPuPdControl;
+	uint8_t GPIO_OPType;
+	uint8_t GPIO_AltFunMode;
+
+}GPIO_PIN_Config_t;
+// Handle structure for GPIO
+typedef struct{
+	GPIO_RegDef_t* pGPIOx;
+	GPIO_PIN_Config_t  GPIO_PIN_Config;
+}GPIO_Handle_t;
+
+#endif /* INC_STM32L476XX_GPIO_DRIVER_H_ */

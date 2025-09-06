@@ -5,9 +5,9 @@
  *      Author: matth_ik1hap6
  */
 #include <stdint.h>
+
 #ifndef INC_STM32L476XX_H_
 #define INC_STM32L476XX_H_
-
 #define __vo    								volatile
 
 
@@ -148,20 +148,20 @@ typedef struct {
 // Peripheral register definition for EXTI
 
 typedef struct {
-	__vo uint32_t EXTI_IMR1;     // offset 0x00
-	__vo uint32_t EXTI_EMR1;	// 0x04
-	__vo uint32_t EXTI_RTSR1;	// 0x08
-	__vo uint32_t EXTI_FTSR1;	// 0x0C
-	__vo uint32_t EXTI_SWIER1;	// 0x10
-	__vo uint32_t EXTI_PR1;
+	__vo uint32_t IMR1;     // offset 0x00
+	__vo uint32_t EMR1;		// 0x04
+	__vo uint32_t RTSR1;	// 0x08
+	__vo uint32_t FTSR1;	// 0x0C
+	__vo uint32_t SWIER1;	// 0x10
+	__vo uint32_t PR1;
 		 uint32_t reserved1;
 	     uint32_t reserved2;
-	__vo uint32_t EXTI_IMR2;
-	__vo uint32_t EXTI_EMR2;
-	__vo uint32_t EXTI_RTSR2;
-	__vo uint32_t EXTI_FTSR2;
-	__vo uint32_t EXTI_SWIER2;
-	__vo uint32_t EXTI_PR2;
+	__vo uint32_t IMR2;
+	__vo uint32_t EMR2;
+	__vo uint32_t RTSR2;
+	__vo uint32_t FTSR2;
+	__vo uint32_t SWIER2;
+	__vo uint32_t PR2;
 }EXTI_RegDef_t;
 
 
@@ -169,15 +169,13 @@ typedef struct {
 
 typedef struct {
 
-		__vo uint32_t SYSCFG_MEMRMP; // offset 0x00
-		__vo uint32_t SYSCFG_CFGR1;	// 0x04
-		__vo uint32_t SYSCFG_EXTICR[4];	// 0x08 - 0x1C
-		__vo uint32_t SYSCFG_SCSR;
-		__vo uint32_t SYSCFG_CFGR2;
-		__vo uint32_t SYSCFG_SWPR;
-		__vo uint32_t SYSCFG_SKR;
-		     uint8_t  reserved;
-		__vo uint32_t SYSCFG_SWPR2;
+		__vo uint32_t MEMRMP; // offset 0x00
+		__vo uint32_t CFGR1;	// 0x04
+		__vo uint32_t EXTICR[4];	// 0x08 - 0x1C
+		__vo uint32_t SCSR;
+		__vo uint32_t CFGR2;
+		__vo uint32_t SWPR;
+		__vo uint32_t SKR;
 
 }SYSCFG_RegDef_t;
 
@@ -291,21 +289,14 @@ typedef struct {
 
 // @GPIO PIN SYSCFG_EXTIx pin configuration
 
-#define PIN_A						0
-#define PIN_B						1
-#define PIN_C						2
-#define PIN_D						3
-#define PIN_E						4
-#define PIN_F						5
-#define PIN_G						6
 
-#define PORTCODE_BASE_ADDR(x)		( (x == GPIOA) ? PIN_A :\
-									(x == GPIOB) ? PIN_B :\
-									(x == GPIOC) ? PIN_C :\
-									(x == GPIOD) ? PIN_D :\
-									(x == GPIOE) ? PIN_E :\
-									(x == GPIOF) ? PIN_F :\
-									(x == GPIOG) ? PIN_G : 0)
+#define PORTCODE_BASEADDR(x)	 (  (x == GPIOA) ? 0 :\
+									(x == GPIOB) ? 1 :\
+									(x == GPIOC) ? 2 :\
+									(x == GPIOD) ? 3 :\
+									(x == GPIOE) ? 4 :\
+									(x == GPIOF) ? 5 :\
+									(x == GPIOG) ? 6 : 0)
 
 
 /* --------------------------------Interrupt Request Number Positions for EXTIx on VECTRO Table-----------------------*/
@@ -315,9 +306,25 @@ typedef struct {
 #define IRQ_NO_EXTI3				9
 #define IRQ_NO_EXTI4				10
 #define IRQ_NO_EXTI9_5				23
-#define IRQ_NO_EXTI10_15			40
+#define IRQ_NO_EXTI15_10			40
 
 
+#define NVIC_IRQ_PRI0				0
+#define NVIC_IRQ_PRI1				1
+#define NVIC_IRQ_PRI2				2
+#define NVIC_IRQ_PRI3				3
+#define NVIC_IRQ_PRI4				4
+#define NVIC_IRQ_PRI5				5
+#define NVIC_IRQ_PRI6				6
+#define NVIC_IRQ_PRI7				7
+#define NVIC_IRQ_PRI8				8
+#define NVIC_IRQ_PRI9				9
+#define NVIC_IRQ_PRI10				10
+#define NVIC_IRQ_PRI11				11
+#define NVIC_IRQ_PRI12				12
+#define NVIC_IRQ_PRI13				13
+#define NVIC_IRQ_PRI14				14
+#define NVIC_IRQ_PRI15				15
 
 // General Macros
 #define ENABLE 								1

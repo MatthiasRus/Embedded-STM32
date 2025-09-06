@@ -91,37 +91,42 @@ void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
 			// TODO  interrupt mode
 			if (pGPIOHandle->GPIO_PIN_Config.GPIO_PinMode == GPIO_MODE_IT_FT){
 					// Configure FTSR ( Falling trigger Selection Register)
-					EXTI->EXTI_FTSR1 |= (1 << pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber);
+					EXTI->FTSR1 |= (1 << pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber);
 					// Clear the RTSR corresponding bit
-					EXTI->EXTI_RTSR1 &= ~(1 << pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber);
+					EXTI->RTSR1 &= ~(1 << pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber);
 
 			}
 			else if (pGPIOHandle->GPIO_PIN_Config.GPIO_PinMode == GPIO_MODE_IT_RT){
 					// Configure RTSR ( Rising trigger Selection Register)
-					EXTI->EXTI_RTSR1 |= (1 << pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber);
+					EXTI->RTSR1 |= (1 << pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber);
 					// Clear the FTSR corresponding bit
-					EXTI->EXTI_FTSR1 &= ~(1 << pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber);
+					EXTI->FTSR1 &= ~(1 << pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber);
 
 		}
 			else if (pGPIOHandle->GPIO_PIN_Config.GPIO_PinMode == GPIO_MODE_IT_RFT){
 					// Configure both RTSR & FTSR
-					EXTI->EXTI_FTSR1 |= (1 << pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber);
+					EXTI->FTSR1 |= (1 << pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber);
 
-					EXTI->EXTI_RTSR1 |= (1 << pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber);
+					EXTI->RTSR1 |= (1 << pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber);
 
 	}
+					pGPIOHandle->pGPIOx->MODER &= ~(0x3 << (2 * pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber));
 
 			// configure GPIO Port Selection in SYSCFG-EXTICR
 					uint8_t temp1 = pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber / 4;
 					uint8_t temp2 = pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber % 4;
-					uint8_t portCode = PORTCODE_BASE_ADDR(pGPIOHandle->pGPIOx);
+					uint8_t portCode = PORTCODE_BASEADDR(pGPIOHandle->pGPIOx);
 					SYSCFG_PCLK_EN();
-					SYSCFG->SYSCFG_EXTICR[temp1] |= (portCode << temp2 * 4);
+
+					SYSCFG->EXTICR[temp1] &= ~(0xF << (temp2 * 4));
+					SYSCFG->EXTICR[temp1] |= (portCode << (temp2 * 4));
 
 
 
 			// Enable EXTI interrupt delivery using IMR  (Interrupt mask Register)
-					EXTI->EXTI_IMR1 |= (1 << pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber);
+					EXTI->IMR1 |= (1 << pGPIOHandle->GPIO_PIN_Config.GPIO_PinNumber);
+
+
 		}
 
 		temp = 0;
@@ -221,11 +226,11 @@ void GPIO_IRQInterrupt_Config(uint8_t IRQNumber, uint8_t EnorDi){
 				*NVIC_ISER0 |= (1 << IRQNumber);
 
 			}else if (IRQNumber > 31 && IRQNumber < 64){
-				// ISER1 for  31 to  63
+				// ISER1 for  32 to  63
 				*NVIC_ISER1 |= (1 << ( IRQNumber % 32));
 
-			}else if (IRQNumber > 64 && IRQNumber < 96){
-				// ISER2 for   63  to  95
+			}else if (IRQNumber >= 64 && IRQNumber < 96){
+				// ISER2 for   64  to  95
 				*NVIC_ISER2 |= (1 << ( IRQNumber % 64));
 			}
 		}
@@ -238,28 +243,30 @@ void GPIO_IRQInterrupt_Config(uint8_t IRQNumber, uint8_t EnorDi){
 				*NVIC_ICER0 |= (1 << IRQNumber);
 
 			}else if (IRQNumber > 31 && IRQNumber < 64){
-				// ICER1 for  31 to  63
+				// ICER1 for  32 to  63
 				*NVIC_ICER1 |= (1 << IRQNumber % 32);
 
 
-			}else if (IRQNumber > 64 && IRQNumber < 96){
-				// ICER2 for   63  to  95
+			}else if (IRQNumber >= 64 && IRQNumber < 96){
+				// ICER2 for   64  to  95
 				*NVIC_ICER2 |= (1 << IRQNumber % 64);
 			}
 		}
 }
-void GPIO_IRQPriority_Config(uint8_t IRQNumber,uint8_t IRQPriority){
+
+
+void GPIO_IRQPriority_Config(uint8_t IRQNumber,uint32_t IRQPriority){
 		uint8_t iprx = IRQNumber / 4;
 		uint8_t iprx_Section = IRQNumber % 4;
 		uint8_t Shift_amount = (8 * iprx_Section) + (8 - NO_PR_BITS_IMPLEMENTED);
-		*(NVIC_IPR_BASE_ADDR + (iprx * 4)) |= (IRQPriority << Shift_amount);
+		*(NVIC_IPR_BASE_ADDR + iprx) |= (IRQPriority << Shift_amount);
 
 }
 
 
 void GPIO_IRQHandler(uint8_t PinNumber){
 		// clear the EXTI_PR register of the given pin number
-		if (EXTI->EXTI_PR1 & (1 << PinNumber)){
-			EXTI->EXTI_PR1 |= (1 << PinNumber);
+		if (EXTI->PR1 & (1 << PinNumber)){
+			EXTI->PR1 |= (1 << PinNumber);
 		}
 }

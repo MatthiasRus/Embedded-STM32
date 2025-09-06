@@ -107,7 +107,7 @@ void GPIO_ToggleOutputPin(GPIO_RegDef_t *pGPIOx, uint8_t PinNumber);
 /*------------------------------IRQ and ISR Handling-----------------------------*/
 
 void GPIO_IRQInterrupt_Config(uint8_t IRQNumber, uint8_t EnorDi);
-void GPIO_IRQPriority_Config(uint8_t IRQNumber,uint8_t IRQPriority);
+void GPIO_IRQPriority_Config(uint8_t IRQNumber,uint32_t IRQPriority);
 void GPIO_IRQHandler(uint8_t PinNumber);
 
 #endif /* INC_STM32L476XX_GPIO_DRIVER_H_ */

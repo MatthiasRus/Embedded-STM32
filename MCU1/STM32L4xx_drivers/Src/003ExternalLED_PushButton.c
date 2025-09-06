@@ -8,11 +8,12 @@
 void delay(void){
 	for (int i = 0; i < 500000/2; i++);
 }
+
 int main(void)
 {
     GPIO_Handle_t GpioLed,GpioButton;
 
-    GpioButton.pGPIOx = GPIOB;		// Button
+    GpioButton.pGPIOx = GPIOA;		// Button
     GpioLed.pGPIOx = GPIOA;			// LED
 
     // GPIO LED Definition
@@ -30,14 +31,14 @@ int main(void)
 
     // Clock Enable Disable Control
     GPIO_Periph_ClockControl(GPIOA, ENABLE);
-    GPIO_Periph_ClockControl(GPIOB, ENABLE);
+    GPIO_Periph_ClockControl(GPIOA, ENABLE);
 
 
     GPIO_Init(&GpioLed);
     GPIO_Init(&GpioButton);
 
     while(1){
-    	if (GPIO_ReadFromInputPin(GPIOB, GPIO_PIN_12)  == BTN_PRESSED){
+    	if (GPIO_ReadFromInputPin(GPIOA, GPIO_PIN_12)  == BTN_PRESSED){
     		delay();			// Helped us to avoid button de-bouncing
     		GPIO_ToggleOutputPin(GPIOA, GPIO_PIN_8);
     	}

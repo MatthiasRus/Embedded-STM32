@@ -1,39 +1,14 @@
-20:28:12 **** Clean-only build of configuration Debug for project STM32L4xx_drivers ****
-make -j8 clean 
-rm -rf ./drivers/Src/stm32l476xx_gpio_driver.cyclo ./drivers/Src/stm32l476xx_gpio_driver.d ./drivers/Src/stm32l476xx_gpio_driver.o ./drivers/Src/stm32l476xx_gpio_driver.su
-rm -rf ./Startup/startup_stm32l476rgtx.d ./Startup/startup_stm32l476rgtx.o
-rm -rf ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
-rm -rf STM32L4xx_drivers.elf STM32L4xx_drivers.list STM32L4xx_drivers.map default.size.stdout
- 
-20:28:14 **** Incremental Build of configuration Debug for project STM32L4xx_drivers ****
+08:31:27 **** Incremental Build of configuration Debug for project STM32L4xx_drivers ****
 make -j8 all 
-arm-none-eabi-gcc "../drivers/Src/stm32l476xx_gpio_driver.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32L4 -DSTM32 -DNUCLEO_L476RG -DSTM32L476RGTx -c -I../Inc -I"C:/Users/matth_ik1hap6/Robotics/Embedded/MCU1/STM32L4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"drivers/Src/stm32l476xx_gpio_driver.d" -MT"drivers/Src/stm32l476xx_gpio_driver.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "drivers/Src/stm32l476xx_gpio_driver.o"
-arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -DDEBUG -c -x assembler-with-cpp -MMD -MP -MF"Startup/startup_stm32l476rgtx.d" -MT"Startup/startup_stm32l476rgtx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Startup/startup_stm32l476rgtx.o" "../Startup/startup_stm32l476rgtx.s"
-arm-none-eabi-gcc "../Src/BTN_interrupt.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32L4 -DSTM32 -DNUCLEO_L476RG -DSTM32L476RGTx -c -I../Inc -I"C:/Users/matth_ik1hap6/Robotics/Embedded/MCU1/STM32L4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/BTN_interrupt.d" -MT"Src/BTN_interrupt.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/BTN_interrupt.o"
-arm-none-eabi-gcc "../Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32L4 -DSTM32 -DNUCLEO_L476RG -DSTM32L476RGTx -c -I../Inc -I"C:/Users/matth_ik1hap6/Robotics/Embedded/MCU1/STM32L4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/syscalls.d" -MT"Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/syscalls.o"
-arm-none-eabi-gcc "../Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32L4 -DSTM32 -DNUCLEO_L476RG -DSTM32L476RGTx -c -I../Inc -I"C:/Users/matth_ik1hap6/Robotics/Embedded/MCU1/STM32L4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/sysmem.d" -MT"Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/sysmem.o"
+arm-none-eabi-gcc "../Src/SPITRY.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DSTM32L4 -DSTM32 -DNUCLEO_L476RG -DSTM32L476RGTx -c -I../Inc -I"C:/Users/matth_ik1hap6/Robotics/Embedded/MCU1/STM32L4xx_drivers/drivers/Inc" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Src/SPITRY.d" -MT"Src/SPITRY.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Src/SPITRY.o"
 arm-none-eabi-gcc -o "STM32L4xx_drivers.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\matth_ik1hap6\Robotics\Embedded\MCU1\STM32L4xx_drivers\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32L4xx_drivers.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: STM32L4xx_drivers.elf
  
 arm-none-eabi-size  STM32L4xx_drivers.elf 
 arm-none-eabi-objdump -h -S STM32L4xx_drivers.elf  > "STM32L4xx_drivers.list"
    text	   data	    bss	    dec	    hex	filename
-   2132	      0	   1568	   3700	    e74	STM32L4xx_drivers.elf
+    664	      0	   1568	   2232	    8b8	STM32L4xx_drivers.elf
 Finished building: default.size.stdout
  
 Finished building: STM32L4xx_drivers.list
- 
-20:28:25 **** Incremental Build of configuration Debug for project STM32L4xx_drivers ****
-make -j8 all 
-arm-none-eabi-size  STM32L4xx_drivers.elf 
-   text	   data	    bss	    dec	    hex	filename
-   2132	      0	   1568	   3700	    e74	STM32L4xx_drivers.elf
-Finished building: default.size.stdout
- 
-20:30:50 **** Incremental Build of configuration Debug for project STM32L4xx_drivers ****
-make -j8 all 
-arm-none-eabi-size  STM32L4xx_drivers.elf 
-   text	   data	    bss	    dec	    hex	filename
-   2132	      0	   1568	   3700	    e74	STM32L4xx_drivers.elf
-Finished building: default.size.stdout
  

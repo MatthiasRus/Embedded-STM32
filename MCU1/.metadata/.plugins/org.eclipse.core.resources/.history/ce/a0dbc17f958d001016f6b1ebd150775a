@@ -1,0 +1,27 @@
+/*
+ * stm32l476xx_spi_driver.h
+ *
+ *  Created on: Sep 9, 2025
+ *      Author: matth_ik1hap6
+ */
+
+#ifndef INC_STM32L476XX_SPI_DRIVER_H_
+#define INC_STM32L476XX_SPI_DRIVER_H_
+
+#include "stm32l476xx.h"
+
+typedef struct{
+	uint8 SPI_DeviceMode;
+	uint8 SPI_BusConfig;
+	uint8 SPI_SclkSpeed;
+	uint8 CPOL;
+	uint8 CPHA;
+	uint8 SSM;
+}SPI_Config_t;
+
+
+typedef struct{
+	SPI_RegDef_t *pSPIx;
+	SPI_Config_t SPI_Config;
+}SPI_Handle_t;
+#endif /* INC_STM32L476XX_SPI_DRIVER_H_ */

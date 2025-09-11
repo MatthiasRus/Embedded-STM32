@@ -1,0 +1,125 @@
+
+#include "stm32l476xx_spi_driver.h"
+
+uint8_t SPI_Get_FlagStatus(SPI_RegDef_t *pSPIx, uint32_t Flag_Name){
+	if (pSPIx->SR == Flag_Name){
+		return FLAG_SET;
+	}
+	return FLAG_RESET;
+}
+
+void SPI_Periph_ClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi){
+	if (EnorDi == ENABLE){
+		if (pSPIx == SPI1){
+			SPI1_PCLK_EN();
+		}else if (pSPIx == SPI2){
+			SPI2_PCLK_EN();
+		}else if (pSPIx == SPI3){
+			SPI3_PCLK_EN();
+		}
+	}else{
+		if (pSPIx == SPI1){
+					SPI1_PCLK_DI();
+				}else if (pSPIx == SPI2){
+					SPI2_PCLK_DI();
+				}else if (pSPIx == SPI3){
+					SPI3_PCLK_DI();
+				}
+	}
+}
+
+/*------------------------------SPI initialization and de-initialization------*/
+
+void SPI_Init(SPI_Handle_t *pSPIHandle){
+
+	uint32_t tempReg = 0;
+
+	// Device Mode Configuration
+	tempReg |= pSPIHandle->SPI_Config.SPI_DeviceMode << SPI_CR1_DEVICE_MODE;
+
+	// Bus Configuration
+	if ( pSPIHandle->SPI_Config.SPI_BusConfig == SPI_BUS_CONFIG_FD){
+		// we should clear the bidi Mode
+		 tempReg  &= ~(1 << SPI_CR1_BIDI);
+	}else if ( pSPIHandle->SPI_Config.SPI_BusConfig == SPI_BUS_CONFIG_HD){
+		// we should set the bidi mode
+		tempReg  |= (1 << SPI_CR1_BIDI);
+
+	}else if ( pSPIHandle->SPI_Config.SPI_BusConfig == SPI_BUS_CONFIG_SIMPLEX_RXONLY){
+		// we should clear the bidi mode and enable rx only
+		tempReg  &= ~(1 << SPI_CR1_BIDI);
+		tempReg  |= (1 << SPI_CR1_RX);
+
+	}
+
+	// Serial Clock Speed Configuration
+	tempReg |= ( pSPIHandle->SPI_Config.SPI_SclkSpeed << SPI_CR1_SCLK);
+
+	// Data Frame Format Config
+	tempReg |= ( pSPIHandle->SPI_Config.SPI_DFF << SPI_CR1_DFF);
+
+	// CPOL
+	tempReg |= ( pSPIHandle->SPI_Config.SPI_CPOL << SPI_CR1_CPOL);
+
+	//CPHA
+	tempReg |= ( pSPIHandle->SPI_Config.SPI_CPHA << SPI_CR1_CPHA);
+
+
+
+}
+void SPI_DeInit(SPI_RegDef_t *pSPIx){
+	// Peripheral clock Reset in one go
+	if (pSPIx == SPI1){
+		SPI1_REG_RESET();
+		}else if(pSPIx == SPI2){
+			SPI2_REG_RESET();
+		}else if(pSPIx == SPI3){
+			SPI3_REG_RESET();
+		}
+}
+
+
+/*-----------------------------Send and Receive Data-----------------------------*/
+
+/*				Polling OR Blocking Call */
+void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t *Len){
+
+		while (Len > 0){
+			// Let's Wait until TXE is Set
+			while (SPI_Get_FlagStatus(pSPIx, SPI_TXE_FLAG) == FLAG_RESET);
+
+			// check the DFF
+			if (pSPIx->CR1 & (1 << SPI_CR1_DFF)){
+				// 16 Bit field
+				// load the data on the data register
+				pSPIx->DR = *((uint16_t*)pTxBuffer);
+				Len--;Len--; // We just have loaded two bytes of data
+				// We have to move pointer to the next data address
+				(uint16_t*)pTxBuffer++; // will be shifted 2 bytes due to the type casting
+			}else{
+				// 8 bit field
+				pSPIx->DR = *(pTxBuffer);
+				Len--;
+				pTxBuffer++;
+			}
+
+
+		}
+}
+void SPI_RecieveData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t *Len){
+
+}
+
+
+/*------------------------------IRQ and ISR Handling-----------------------------*/
+
+void SPI_IRQInterrupt_Config(uint8_t IRQNumber, uint8_t EnorDi){
+
+}
+void SPI_IRQPriority_Config(uint8_t IRQNumber,uint32_t IRQPriority){
+
+}
+void SPI_IRQHandler(SPI_Handle_t *pHandle){
+
+}
+

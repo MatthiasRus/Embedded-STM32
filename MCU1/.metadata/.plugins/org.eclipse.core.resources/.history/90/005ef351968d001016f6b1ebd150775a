@@ -1,0 +1,24 @@
+
+#include "stm32l476xx_spi_driver.h"
+
+
+void SPI_Periph_ClockControl(SPI_RegDef_t *pSPIx, uint8_t EnorDi);
+
+/*------------------------------SPI initialization and de-initialization------*/
+
+void SPI_Init(SPI_Handle_t *pSPIHandle);
+void SPI_DeInit(SPI_RegDef_t *pSPIx);   // Peripheral clock Reset in one go
+
+
+/*-----------------------------Send and Recieve Data-----------------------------*/
+
+void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t *Len);
+void SPI_RecieveData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t *Len);
+
+
+/*------------------------------IRQ and ISR Handling-----------------------------*/
+
+void SPI_IRQInterrupt_Config(uint8_t IRQNumber, uint8_t EnorDi);
+void SPI_IRQPriority_Config(uint8_t IRQNumber,uint32_t IRQPriority);
+void SPI_IRQHandler(SPI_Handle_t *pHandle);/*
+

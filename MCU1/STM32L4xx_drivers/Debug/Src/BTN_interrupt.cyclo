@@ -1,3 +1,0 @@
-../Src/BTN_interrupt.c:8:6:delay	2
-../Src/BTN_interrupt.c:11:5:main	1
-../Src/BTN_interrupt.c:53:6:EXTI15_10_IRQHandler	1

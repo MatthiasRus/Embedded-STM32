@@ -82,7 +82,13 @@
 #define SYSCFG_BASE_ADDR						(APB2_PERIPH_BASE_ADDR + 0X0000)
 
 
+/*  ADC offsets For master and slave */
+#define MASTER_ADC_OFFSET                            0x00
+#define SLAVE_ADC_OFFSET						     0x100
+#define MS_COMMON_ADC_OFFSET					 	 0x300
 
+#define ADC1_BASE_ADDR    (0x50040000U)
+#define ADC_COMM_ADDR     (0x50040300U)
 /*--------------------------------------------------------------------------------------*/
 
 
@@ -181,16 +187,92 @@ typedef struct {
 
 
 typedef struct{
-	uint8_t CR1;
-	uint8_t CR2;
-	uint8_t SR;
-	uint8_t DR;
-	uint8_t CRCPR;
-	uint8_t RXCRCR;
-	uint8_t TXCRCR;
+	__vo uint32_t CR1;
+	__vo uint32_t CR2;
+	__vo uint32_t SR;
+	__vo uint32_t DR;
+	__vo uint32_t CRCPR;
+	__vo uint32_t RXCRCR;
+	__vo uint32_t TXCRCR;
 }SPI_RegDef_t;
 
-// ----------------------------Peripheral addresses defined (GPIO_RegDef)------------------------*/
+
+typedef struct{
+	__vo uint32_t CR1;
+	__vo uint32_t CR2;
+	__vo uint32_t OAR1;
+	__vo uint32_t OAR2;
+	__vo uint32_t TIMINGR;
+	__vo uint32_t TIMEOUTR;
+	__vo uint32_t ISR;
+	__vo uint32_t ICR;
+	__vo uint32_t PECR;
+	__vo uint32_t RXDR;
+	__vo uint32_t TXDR;
+
+}I2C_RegDef_t;
+
+
+
+typedef struct {
+	 __vo uint32_t ISR;      // 0x00
+	 __vo uint32_t IER;      // 0x04
+	 __vo uint32_t CR;      // 0x08
+	 __vo uint32_t CFGR;      // 0x0C
+	 __vo uint32_t CFGR2;      // 0x10
+	 __vo uint32_t SMPR1;      // 0x14
+	 __vo uint32_t SMPR2;      // 0x18
+	 	   uint32_t Reserved1;      // 0x1C
+	 __vo uint32_t TR1;      // 0x20
+	 __vo uint32_t TR2;      // 0x24
+	 __vo uint32_t TR3;      // 0x28
+	       uint32_t Reserved2;      // 0x2C
+	 __vo uint32_t SQR1;      // 0x30
+	 __vo uint32_t SQR2;      // 0x34
+	 __vo uint32_t SQR3;      // 0x38
+	 __vo uint32_t SQR4;      // 0x3C
+	 __vo uint32_t DR;      // 0x40
+	       uint32_t Reserved4;      // 0x44
+	       uint32_t Reserved19;      // 0x48
+	 __vo uint32_t JSQR;      // 0x4C
+	       uint32_t Reserved5;      // 0x50
+	       uint32_t Reserved6;      // 0x54
+	       uint32_t Reserved7;      // 0x58
+	       uint32_t Reserved8;      // 0x5C
+	 __vo uint32_t OFR1;      // 0x60
+	 __vo uint32_t OFR2;      // 0x64
+	 __vo uint32_t OFR3;      // 0x68
+	 __vo uint32_t OFR4;      // 0x6C
+	       uint32_t Reserved12;      // 0x70
+	 	   uint32_t Reserved9;      // 0x74
+		   uint32_t Reserved10;      // 0x78
+		   uint32_t Reserved11;      // 0x7C
+	 __vo uint32_t JDR1;      // 0x80
+	 __vo uint32_t JDR2;      // 0x84
+	 __vo uint32_t JDR3;      // 0x88
+	 __vo uint32_t JDR4;      // 0x8C
+			 uint32_t Reserved13;      // 0x90
+			 uint32_t Reserved14;      // 0x94
+			 uint32_t Reserved15;      // 0x98
+			 uint32_t Reserved16;      // 0x9c
+	 __vo uint32_t AWD2CR;      // 0xA0
+	 __vo uint32_t AWD3CR;      // 0xA4
+			 uint32_t Reserved17;      // 0xA8
+			 uint32_t Reserved18;      // 0xAC
+		 __vo uint32_t DIFSEL;      // 0xB0
+		 __vo uint32_t CALFACT;      // 0xB4
+
+}ADC_RegDef_t;
+
+
+
+typedef struct {
+	 	 	 __vo uint32_t CSR;      // 0x00
+	 	 	 	  uint32_t Reserved20;      // 0x04 _
+			 __vo uint32_t CCR;      // 0x08
+			 __vo uint32_t CDR;      // 0x0C
+}ADC_ComRegDef_t;
+/* ----------------------------Peripheral addresses defined (GPIO_RegDef)------------------------*/
 
 #define GPIOA									((GPIO_RegDef_t*)GPIOA_BASE_ADDR)
 #define GPIOB									((GPIO_RegDef_t*)GPIOB_BASE_ADDR)
@@ -202,11 +284,17 @@ typedef struct{
 #define GPIOH									((GPIO_RegDef_t*)GPIOH_BASE_ADDR)
 
 
-// ----------------------------Peripheral addresses defined (SPI_RegDef)------------------------*/
+/* ----------------------------Peripheral addresses defined (SPI_RegDef)------------------------*/
 
 #define SPI1									((SPI_RegDef_t*)SPI1_BASE_ADDR)
 #define SPI2									((SPI_RegDef_t*)SPI2_BASE_ADDR)
 #define SPI3									((SPI_RegDef_t*)SPI3_BASE_ADDR)
+
+/*=============================Peripheral addresses for I2C(I2C RegDef==========================*/
+
+#define I2C1 									((I2C_RegDef_t*)I2C1_BASE_ADDR)
+#define I2C2 									((I2C_RegDef_t*)I2C2_BASE_ADDR)
+#define I2C3 									((I2C_RegDef_t*)I2C3_BASE_ADDR)
 
 
 #define RCC										((RCC_RegDef_t*)RCC_BASE_ADDR)
@@ -215,6 +303,13 @@ typedef struct{
 
 #define SYSCFG									((SYSCFG_RegDef_t*)SYSCFG_BASE_ADDR)
 
+// ===========================ADC Pointer Initializaiton=========================================
+#define ADC1              						((ADC_RegDef_t*)ADC1_BASE_ADDR)
+#define ADC1_COMMON       						((ADC_ComRegDef_t*)ADC_COMM_ADDR)
+
+
+#define ADC1_PCLK_EN()    (RCC->AHB2ENR |= (1 << 13))
+#define ADC1_REG_RESET()  do { (RCC->AHB2RSTR |= (1 << 13));  RCC->AHB2RSTR &= ~(1 << 13)); } while(0)
 /*	-------------------------clock enable macros for GPIOx------------------------------------*/
 
 #define GPIOA_PCLK_EN()					(RCC->AHB2ENR |= (1 << 0))
@@ -311,6 +406,14 @@ typedef struct{
 #define SPI2_REG_RESET()					do { (RCC->APB1RSTR1 |= (1 << 14)); (RCC->APB1RSTR1 &= ~(1 << 14)); } while (0)
 #define SPI3_REG_RESET()					do { (RCC->APB1RSTR1 |= (1 << 15)); (RCC->APB1RSTR1 &= ~(1 << 15)); } while (0)
 
+
+/*-------------------------------I2C REGISTER RESET-----------------------------------------------*/
+
+#define I2C1_REG_RESET()					do { (RCC->APB1RSTR |= (1 << 21)); (RCC->APB1RSTR &= ~(1 << 21)); } while (0)
+#define I2C2_REG_RESET()					do { (RCC->APB1RSTR1 |= (1 << 22)); (RCC->APB1RSTR1 &= ~(1 << 22)); } while (0)
+#define I2C3_REG_RESET()					do { (RCC->APB1RSTR1 |= (1 << 23)); (RCC->APB1RSTR1 &= ~(1 << 23)); } while (0)
+
+
 // @GPIO PIN SYSCFG_EXTIx pin configuration
 
 
@@ -332,6 +435,10 @@ typedef struct{
 #define IRQ_NO_EXTI9_5				23
 #define IRQ_NO_EXTI15_10			40
 
+/*---------------------------------Interrupt Request Number for SPI---------------------------------------------------*/
+#define IRQ_NO_SPI1					35
+#define IRQ_NO_SPI2					36
+#define IRQ_NO_SPI3					53
 
 #define NVIC_IRQ_PRI0				0
 #define NVIC_IRQ_PRI1				1
@@ -349,6 +456,9 @@ typedef struct{
 #define NVIC_IRQ_PRI13				13
 #define NVIC_IRQ_PRI14				14
 #define NVIC_IRQ_PRI15				15
+
+
+
 
 // General Macros
 #define ENABLE 								1
@@ -371,7 +481,7 @@ typedef struct{
 #define SPI_CR1_CPOL						1
 #define SPI_CR1_DEVICE_MODE					2
 #define SPI_CR1_SCLK						3
-#define SPI_CR1_EN  						6
+#define SPI_CR1_SPE  						6
 #define SPI_CR1_LSBFIRST					7
 #define SPI_CR1_SSI 						8
 #define SPI_CR1_SSM						    9
@@ -409,8 +519,72 @@ typedef struct{
 #define SPI_SR_FTLVL					11
 
 
+/* -------------------------------------Bit Position for CR1 I2C----------------------------------*/
+
+#define PECEN							23
+#define ALERTEN							22
+#define SMBDEN							21
+#define SMBHEN							20
+#define GCEN							19
+#define WUPEN							18
+#define NOSTRETCH						17
+#define SBC								16
+#define RXDMAEN							15
+#define TXDMAEN							14
+#define ANFOF							12
+#define ERRIE							7
+#define TCIE							6
+#define STOPIE							5
+#define NACKIE							4
+#define ADDRIE							3
+#define RXIE							2
+#define TXIE							1
+#define PE								0
+
+/* -------------------------------------Bit Position for CR2 I2C----------------------------------*/
+#define PECBYTE							26
+#define AUTOEND							25
+#define RELOAD							24
+#define NACK							15
+#define STOP							14
+#define START							13
+#define HEAD10R							12
+#define ADD10							11
+#define RD_WRN							10
+
+/* -------------------------------------Bit Position for ISR I2C----------------------------------*/
+#define DIR								16
+#define BUSY							15
+#define ALERT							13
+#define TIMEOUT							12
+#define PECERR							11
+#define OVR								10
+#define ARLO							9
+#define BERR							8
+#define TCR								7
+#define TC								6
+#define STOPF							5
+#define NACKF							4
+#define ADDR							3
+#define RXNE							2
+#define TXIS							1
+#define TXE								0
+
+/* -------------------------------------Bit Position for ICR I2C----------------------------------*/
+
+#define RTCF							13
+#define TIMOUTCF						12
+#define PECCF							11
+#define OVRCF							10
+#define ARLOCF							9
+#define BERRCF							8
+#define STOPCF							5
+#define NACKCF							4
+#define ADDRCF							3
 
 #include "stm32l476xx_gpio_driver.h"
 #include "stm32l476xx_spi_driver.h"
-
+#include "stm32l476xx_i2c_driver.h"
+#include "stm32l476xx_adc_driver.h"
+#include "systick.h"
 #endif /* INC_STM32L476XX_H_ */

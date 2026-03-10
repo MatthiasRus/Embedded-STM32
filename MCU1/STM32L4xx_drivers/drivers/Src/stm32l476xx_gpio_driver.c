@@ -80,6 +80,9 @@ void GPIO_Periph_ClockControl(GPIO_RegDef_t *pGPIOx, uint8_t EnorDi){
 void GPIO_Init(GPIO_Handle_t *pGPIOHandle){
 
 	uint32_t temp = 0;
+
+	GPIO_Periph_ClockControl(pGPIOHandle->pGPIOx, ENABLE);
+
 	// gpio mode
 		if (pGPIOHandle->GPIO_PIN_Config.GPIO_PinMode <= GPIO_MODE_ANALOG){
 			// Non-Interrupt mode

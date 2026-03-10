@@ -1,9 +1,0 @@
-../drivers/Src/stm32l476xx_spi_driver.c:4:9:SPI_Get_FlagStatus	16	static
-../drivers/Src/stm32l476xx_spi_driver.c:11:6:SPI_Periph_ClockControl	16	static
-../drivers/Src/stm32l476xx_spi_driver.c:33:6:SPI_Init	24	static
-../drivers/Src/stm32l476xx_spi_driver.c:70:6:SPI_DeInit	16	static
-../drivers/Src/stm32l476xx_spi_driver.c:85:6:SPI_SendData	24	static
-../drivers/Src/stm32l476xx_spi_driver.c:109:6:SPI_RecieveData	24	static
-../drivers/Src/stm32l476xx_spi_driver.c:116:6:SPI_IRQInterrupt_Config	16	static
-../drivers/Src/stm32l476xx_spi_driver.c:119:6:SPI_IRQPriority_Config	16	static
-../drivers/Src/stm32l476xx_spi_driver.c:122:6:SPI_IRQHandler	16	static

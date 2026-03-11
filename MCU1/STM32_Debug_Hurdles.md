@@ -1,4 +1,4 @@
-# STM32 Bare Metal Debug Hurdles — Personal Reference
+# STM32 Bare Metal Debug Hurdles — Personal Reference (LVU hexdump)
 **Built during ADC + USART driver development on STM32L476RG**
 
 ---

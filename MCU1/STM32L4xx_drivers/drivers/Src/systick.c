@@ -6,7 +6,7 @@
 #define SYSTICK_VAL     (*(volatile uint32_t*)(SYSTICK_BASE + 0x08))
 
 void SysTick_Init(void) {
-    SYSTICK_LOAD = 80000 - 1;
+    SYSTICK_LOAD = 16000 - 1;
     SYSTICK_VAL  = 0;
     SYSTICK_CTRL = (1 << 2) | (1 << 1) | (1 << 0);
 }

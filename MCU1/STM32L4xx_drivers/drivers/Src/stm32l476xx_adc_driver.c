@@ -74,6 +74,7 @@ void ADC_Init(ADC_Handle_t *pADCHandle){
 	    // 1st step to enable ADC which is ADEN all ADC_CR regs must be 0 WOW
 	    pADCHandle->ADCx->CR &= ~(1 << 1);   // clear the ADDIS
 	    pADCHandle->ADCx->CR |= (1 << 0);
+
 	    volatile uint32_t timeout2 = 1000000;
 	    while(!(pADCHandle->ADCx->ISR & (1 << 0)) && timeout2--);
 	    if(timeout2 == 0) while(1);  // breakpoint here

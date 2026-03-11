@@ -1,0 +1,6 @@
+../drivers/Src/stm32l476xx_usart_driver.c:12:6:USART_Init	16	static
+../drivers/Src/stm32l476xx_usart_driver.c:123:6:USART_DeInit	16	static
+../drivers/Src/stm32l476xx_usart_driver.c:128:6:USART_SendData	32	static
+../drivers/Src/stm32l476xx_usart_driver.c:138:6:USART_SendChar	16	static
+../drivers/Src/stm32l476xx_usart_driver.c:143:6:USART_SendString	16	static
+../drivers/Src/stm32l476xx_usart_driver.c:151:6:USART_SendNumber	40	static

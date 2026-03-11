@@ -12,8 +12,10 @@
 #define  TS_CAL2 					(*(uint16_t*)0x1FFF75CAU)
 
 int main(void){
-	// Freeze WWDG during debug halt
-	*((volatile uint32_t*)0xE0042008) |= (1 << 9);  // DBGMCU_APB1FZR1, freeze WWDG
+	// Enable FPU
+	*((volatile uint32_t*)0xE000ED88) |= (0xF << 20);
+	__asm volatile("DSB");
+	__asm volatile("ISB");
 	SysTick_Init();
 	ADC_Handle_t ADC ;
 
@@ -34,12 +36,11 @@ int main(void){
 	 * temp = ((110 - 30) / (TS_CAL2 - TS_CAL1)) * (adc_value - TS_CAL1) + 30
 	 */
 	while (1){
-		uint16_t cal1 = TS_CAL1, cal2 = TS_CAL2;
-		uint16_t adcValue = ADC_ReadData(&ADC);
+		float cal1 = TS_CAL1, cal2 = TS_CAL2;
+		float adcValue = ADC_ReadData(&ADC);
 
-		uint16_t temperature = ((110 - 30) / (cal2 - cal1))
-		                    * (adcValue - cal1) + 30;
-
+		float adcCorrected = (float)adcValue * (3.0f / 3.3f);
+		float temperature = -1 * (((80.0f / (float)(cal2 - cal1)) * (adcCorrected - (float)cal1)) + 30.0f);
 	}
 
 

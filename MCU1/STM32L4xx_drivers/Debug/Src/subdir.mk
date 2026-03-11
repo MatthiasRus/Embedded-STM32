@@ -5,17 +5,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Src/ADC_InternalTemp_Reading.c \
+../Src/USART2_Transmit.c \
 ../Src/syscalls.c \
 ../Src/sysmem.c 
 
 OBJS += \
-./Src/ADC_InternalTemp_Reading.o \
+./Src/USART2_Transmit.o \
 ./Src/syscalls.o \
 ./Src/sysmem.o 
 
 C_DEPS += \
-./Src/ADC_InternalTemp_Reading.d \
+./Src/USART2_Transmit.d \
 ./Src/syscalls.d \
 ./Src/sysmem.d 
 
@@ -27,7 +27,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/ADC_InternalTemp_Reading.cyclo ./Src/ADC_InternalTemp_Reading.d ./Src/ADC_InternalTemp_Reading.o ./Src/ADC_InternalTemp_Reading.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
+	-$(RM) ./Src/USART2_Transmit.cyclo ./Src/USART2_Transmit.d ./Src/USART2_Transmit.o ./Src/USART2_Transmit.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su
 
 .PHONY: clean-Src
 

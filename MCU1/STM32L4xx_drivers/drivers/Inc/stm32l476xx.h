@@ -90,7 +90,9 @@
 #define ADC1_BASE_ADDR    (0x50040000U)
 #define ADC_COMM_ADDR     (0x50040300U)
 /*--------------------------------------------------------------------------------------*/
+/*=============================USART ADDRESS REgion=====================================*/
 
+#define USART2              ((USART_RegDef_t*)USART2_BASE_ADDR)
 
 /* ---------------------peripheral register definition structures------------------------*/
 
@@ -131,6 +133,7 @@ typedef struct {
 			    __vo uint32_t AHB1ENR;
 			    __vo uint32_t AHB2ENR;
 			    __vo uint32_t AHB3ENR;
+			         uint32_t reserved9;
 			    __vo uint32_t APB1ENR1;
 		    	 	 uint32_t reserved4;
 			    __vo uint32_t APB1ENR2;
@@ -272,6 +275,21 @@ typedef struct {
 			 __vo uint32_t CCR;      // 0x08
 			 __vo uint32_t CDR;      // 0x0C
 }ADC_ComRegDef_t;
+
+typedef struct {
+	__vo uint32_t CR1;
+	__vo uint32_t CR2;
+	__vo uint32_t CR3;
+	__vo uint32_t BRR;
+	__vo uint32_t GTPR;
+	__vo uint32_t RTOR;
+	__vo uint32_t RQR;
+	__vo uint32_t ISR;
+	__vo uint32_t ICR;
+	__vo uint32_t RDR;
+	__vo uint32_t TDR;
+} USART_RegDef_t;
+
 /* ----------------------------Peripheral addresses defined (GPIO_RegDef)------------------------*/
 
 #define GPIOA									((GPIO_RegDef_t*)GPIOA_BASE_ADDR)
@@ -586,5 +604,6 @@ typedef struct {
 #include "stm32l476xx_spi_driver.h"
 #include "stm32l476xx_i2c_driver.h"
 #include "stm32l476xx_adc_driver.h"
+#include "stm32l476xx_usart_driver.h"
 #include "systick.h"
 #endif /* INC_STM32L476XX_H_ */

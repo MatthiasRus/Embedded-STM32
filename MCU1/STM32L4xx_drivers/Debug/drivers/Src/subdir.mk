@@ -7,16 +7,19 @@
 C_SRCS += \
 ../drivers/Src/stm32l476xx_adc_driver.c \
 ../drivers/Src/stm32l476xx_gpio_driver.c \
+../drivers/Src/stm32l476xx_usart_driver.c \
 ../drivers/Src/systick.c 
 
 OBJS += \
 ./drivers/Src/stm32l476xx_adc_driver.o \
 ./drivers/Src/stm32l476xx_gpio_driver.o \
+./drivers/Src/stm32l476xx_usart_driver.o \
 ./drivers/Src/systick.o 
 
 C_DEPS += \
 ./drivers/Src/stm32l476xx_adc_driver.d \
 ./drivers/Src/stm32l476xx_gpio_driver.d \
+./drivers/Src/stm32l476xx_usart_driver.d \
 ./drivers/Src/systick.d 
 
 
@@ -27,7 +30,7 @@ drivers/Src/%.o drivers/Src/%.su drivers/Src/%.cyclo: ../drivers/Src/%.c drivers
 clean: clean-drivers-2f-Src
 
 clean-drivers-2f-Src:
-	-$(RM) ./drivers/Src/stm32l476xx_adc_driver.cyclo ./drivers/Src/stm32l476xx_adc_driver.d ./drivers/Src/stm32l476xx_adc_driver.o ./drivers/Src/stm32l476xx_adc_driver.su ./drivers/Src/stm32l476xx_gpio_driver.cyclo ./drivers/Src/stm32l476xx_gpio_driver.d ./drivers/Src/stm32l476xx_gpio_driver.o ./drivers/Src/stm32l476xx_gpio_driver.su ./drivers/Src/systick.cyclo ./drivers/Src/systick.d ./drivers/Src/systick.o ./drivers/Src/systick.su
+	-$(RM) ./drivers/Src/stm32l476xx_adc_driver.cyclo ./drivers/Src/stm32l476xx_adc_driver.d ./drivers/Src/stm32l476xx_adc_driver.o ./drivers/Src/stm32l476xx_adc_driver.su ./drivers/Src/stm32l476xx_gpio_driver.cyclo ./drivers/Src/stm32l476xx_gpio_driver.d ./drivers/Src/stm32l476xx_gpio_driver.o ./drivers/Src/stm32l476xx_gpio_driver.su ./drivers/Src/stm32l476xx_usart_driver.cyclo ./drivers/Src/stm32l476xx_usart_driver.d ./drivers/Src/stm32l476xx_usart_driver.o ./drivers/Src/stm32l476xx_usart_driver.su ./drivers/Src/systick.cyclo ./drivers/Src/systick.d ./drivers/Src/systick.o ./drivers/Src/systick.su
 
 .PHONY: clean-drivers-2f-Src
 

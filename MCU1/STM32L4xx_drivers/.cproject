@@ -71,11 +71,14 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.1616488277" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.118791716.379803695" name="ADC_InternalTemp_Reading.c" rcbsApplicability="disable" resourcePath="Src/ADC_InternalTemp_Reading.c" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1788262419.250578837">
+						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1788262419.250578837" name="MCU/MPU GCC Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1788262419"/>
+					</fileInfo>
 					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.118791716.1853165040" name="stm32l476xx_i2c_driver.h" rcbsApplicability="disable" resourcePath="drivers/Inc/stm32l476xx_i2c_driver.h" toolsToInvoke=""/>
 					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.118791716.995620664" name="stm32l476xx_spi_driver.h" rcbsApplicability="disable" resourcePath="drivers/Inc/stm32l476xx_spi_driver.h" toolsToInvoke=""/>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Inc"/>
-						<entry excluding="001LED_Toggle.c|main.c|008_spi_cmd_handling.c|006SPI_SendData.c|007SPI_txonly_arduino.c|SPI_SendData.c|BTN_interrupt.c|003ExternalLED_PushButton.c|002LED_Button_Toggle.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
+						<entry excluding="ADC_InternalTemp_Reading.c|001LED_Toggle.c|main.c|008_spi_cmd_handling.c|006SPI_SendData.c|007SPI_txonly_arduino.c|SPI_SendData.c|BTN_interrupt.c|003ExternalLED_PushButton.c|002LED_Button_Toggle.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Src"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Startup"/>
 						<entry excluding="Inc/stm32l476xx_spi_driver.h|Src/stm32l476xx_i2c.c|Inc/stm32l476xx_i2c_driver.h|Src/stm32l476xx_spi_driver.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="drivers"/>
 					</sourceEntries>

@@ -12,19 +12,32 @@
 void USART_Init(USART_Handle_t *pUSARTxHandle){
 		// Step 1: Enable USART2 peripheral clock
 			USART2_PCLK_EN();
+			USART3_PCLK_EN();
 
 		// step 1.1 GPIO pa2 init af7
-			GPIO_Handle_t GPIO_UART;
-				GPIO_UART.pGPIOx = GPIOA;
-				GPIO_UART.GPIO_PIN_Config.GPIO_PinMode = GPIO_MODE_ALTFN;
-				GPIO_UART.GPIO_PIN_Config.GPIO_AltFunMode = 7;
-				GPIO_UART.GPIO_PIN_Config.GPIO_PinNumber = 2;
-				GPIO_UART.GPIO_PIN_Config.GPIO_PinSpeed = GPIO_SP_HIGH;
-				GPIO_UART.GPIO_PIN_Config.GPIO_PinPuPdControl = GPIO_NO_PUPD;
-				GPIO_UART.GPIO_PIN_Config.GPIO_OPType = GPIO_OP_TYPE_PP;
+			GPIO_Handle_t GPIO_USART_Tx;
+			GPIO_USART_Tx.pGPIOx = GPIOA;
+			GPIO_USART_Tx.GPIO_PIN_Config.GPIO_PinMode = GPIO_MODE_ALTFN;
+			GPIO_USART_Tx.GPIO_PIN_Config.GPIO_AltFunMode = 7;
+			GPIO_USART_Tx.GPIO_PIN_Config.GPIO_PinNumber = 2;
+			GPIO_USART_Tx.GPIO_PIN_Config.GPIO_PinSpeed = GPIO_SP_HIGH;
+			GPIO_USART_Tx.GPIO_PIN_Config.GPIO_PinPuPdControl = GPIO_NO_PUPD;
+			GPIO_USART_Tx.GPIO_PIN_Config.GPIO_OPType = GPIO_OP_TYPE_PP;
 
+			// step 1.1 GPIO pa3 init af7
+			GPIO_Handle_t GPIO_USART_Rx;
+			GPIO_USART_Rx.pGPIOx = GPIOA;
+			GPIO_USART_Rx.GPIO_PIN_Config.GPIO_PinMode = GPIO_MODE_ALTFN;
+			GPIO_USART_Rx.GPIO_PIN_Config.GPIO_AltFunMode = 7;
+			GPIO_USART_Rx.GPIO_PIN_Config.GPIO_PinNumber = 3;
+			GPIO_USART_Rx.GPIO_PIN_Config.GPIO_PinSpeed = GPIO_SP_HIGH;
+			GPIO_USART_Rx.GPIO_PIN_Config.GPIO_PinPuPdControl = GPIO_PIN_PU;
 
-				GPIO_Init(&GPIO_UART);
+			GPIO_Init(&GPIO_USART_Tx);
+			GPIO_Init(&GPIO_USART_Rx);
+
+			// Enable OVRDIS — disable overrun, never block on ORE
+			pUSARTxHandle->USARTx->CR3 |= (1 << 12);
 	    // Step 2: Configure word length, parity, mode in CR1
 			if (pUSARTxHandle->USARTx_Config.USART_WordLength == SEVEN_BIT_WL){
 				pUSARTxHandle->USARTx->CR1   |= (1 << 28);
@@ -178,3 +191,54 @@ void USART_SendNumber(USART_Handle_t *pUSARTxHandle, int num){
     }
 }
 
+uint8_t USART_ReceiveChar(USART_Handle_t *h){
+	// clear overrun error
+	    if(h->USARTx->ISR & (1 << 3)){
+	        h->USARTx->ICR |= (1 << 3);  // ORECF — clear ORE
+	    }
+		while(!(h->USARTx->ISR & (1 << 5)));
+		uint8_t byte = (uint8_t)(h->USARTx->RDR & 0xFF);
+		return byte;
+
+}
+
+void USART_ReceiveLine(USART_Handle_t *h, char *buf, uint32_t maxLen){
+    uint32_t i = 0;
+    char c;
+
+    // wait for '$'
+    do { c = USART_ReceiveChar(h); } while(c != '$');
+    buf[i++] = '$';
+
+    // read rest until newline
+    while(i < maxLen - 1){
+        c = USART_ReceiveChar(h);
+        if(c == '\n' || c == '\r') break;
+        buf[i++] = c;
+    }
+    buf[i] = '\0';
+}
+
+void USART_ParseData(char *buf, Servo_command *cmd){
+	if (buf[0] == '$'){
+		cmd->channel = buf[1] - '0';
+		if (buf[2] == ':'){
+			cmd->pulse_us = atoi(&buf[3]);
+		}
+	}
+}
+
+void USART_ServoCommand(Servo_command *cmd, TIM_RegDef_t *pTIM2, TIM_RegDef_t *pTIM3){
+	if (cmd->pulse_us >= 1000 || cmd->pulse_us<=2000){
+		switch(cmd->channel){
+        case 1: pTIM2->CCR1 = cmd->pulse_us; break;
+        case 2: pTIM2->CCR2 = cmd->pulse_us; break;
+        case 3: pTIM3->CCR1 = cmd->pulse_us; break;
+        case 4: pTIM3->CCR2 = cmd->pulse_us; break;
+        case 5: pTIM3->CCR3 = cmd->pulse_us; break;
+        case 6: pTIM3->CCR4 = cmd->pulse_us; break;
+        default: break;
+    }
+	}
+
+}

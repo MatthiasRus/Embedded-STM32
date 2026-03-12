@@ -1,6 +1,10 @@
-../drivers/Src/stm32l476xx_usart_driver.c:12:6:USART_Init	32	static
-../drivers/Src/stm32l476xx_usart_driver.c:136:6:USART_DeInit	16	static
-../drivers/Src/stm32l476xx_usart_driver.c:141:6:USART_SendData	32	static
-../drivers/Src/stm32l476xx_usart_driver.c:151:6:USART_SendChar	16	static
-../drivers/Src/stm32l476xx_usart_driver.c:156:6:USART_SendString	16	static
-../drivers/Src/stm32l476xx_usart_driver.c:164:6:USART_SendNumber	40	static
+../drivers/Src/stm32l476xx_usart_driver.c:12:6:USART_Init	40	static
+../drivers/Src/stm32l476xx_usart_driver.c:149:6:USART_DeInit	16	static
+../drivers/Src/stm32l476xx_usart_driver.c:154:6:USART_SendData	32	static
+../drivers/Src/stm32l476xx_usart_driver.c:164:6:USART_SendChar	16	static
+../drivers/Src/stm32l476xx_usart_driver.c:169:6:USART_SendString	16	static
+../drivers/Src/stm32l476xx_usart_driver.c:177:6:USART_SendNumber	40	static
+../drivers/Src/stm32l476xx_usart_driver.c:194:9:USART_ReceiveChar	24	static
+../drivers/Src/stm32l476xx_usart_driver.c:205:6:USART_ReceiveLine	32	static
+../drivers/Src/stm32l476xx_usart_driver.c:222:6:USART_ParseData	16	static
+../drivers/Src/stm32l476xx_usart_driver.c:231:6:USART_ServoCommand	24	static

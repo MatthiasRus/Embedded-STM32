@@ -20,7 +20,7 @@ typedef struct{
 }TIM_Handle_t;
 
 
-void PWM_Init(TIM_Handle_t *pTIM_Handle);
+void PWM_TIM2_Init(TIM_Handle_t *pTIM_Handle);
 void PWM_DeInit(TIM_RegDef_t* pTIMx);
-
+void PWM_TIM3_Init(TIM_Handle_t *pTIMx_Handle);
 #endif /* INC_STM32L476XX_TIMX_DRIVER_H_ */

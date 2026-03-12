@@ -38,7 +38,6 @@ int main(void){
 	while (1){
 		float cal1 = TS_CAL1, cal2 = TS_CAL2;
 		float adcValue = ADC_ReadData(&ADC);
-
 		float adcCorrected = (float)adcValue * (3.0f / 3.3f);
 		float temperature = -1 * (((80.0f / (float)(cal2 - cal1)) * (adcCorrected - (float)cal1)) + 30.0f);
 	}

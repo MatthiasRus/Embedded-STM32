@@ -11,21 +11,28 @@
 
 int main(void){
 
-	// clock setup
-	    RCC->CR |= (1 << 8);
-	    while(!(RCC->CR & (1 << 10)));
-	    RCC->CFGR &= ~(3 << 0);
-	    RCC->CFGR |= (1 << 0);
-	    while((RCC->CFGR & (3 << 2)) != (1 << 2));
-				SysTick_Init();
+			// clock setup
+				RCC->CR |= (1 << 8);
+				while(!(RCC->CR & (1 << 10)));
+				RCC->CFGR &= ~(3 << 0);
+				RCC->CFGR |= (1 << 0);
+				while((RCC->CFGR & (3 << 2)) != (1 << 2));
+                SysTick_Init();
 				TIM_Handle_t tim2;
+				TIM_Handle_t tim3;
+
 				tim2.pTIMx   = TIM2;
-				PWM_Init(&tim2);
+				tim3.pTIMx   = TIM3;
+
+
+				PWM_TIM2_Init(&tim2);
+				PWM_TIM3_Init(&tim3);
+
 
 				USART_Handle_t usart;
 					usart.USARTx = USART2;
 					usart.USARTx_Config.USART_BaudRate = USART_DIV_115200;
-					usart.USARTx_Config.USART_Mode = USART_MODE_TX_ONLY;
+					usart.USARTx_Config.USART_Mode = USART_MODE_TX_RX;
 					usart.USARTx_Config.USART_OverSampling = OVERSAMPLING_16;
 					usart.USARTx_Config.USART_WordLength = EIGHT_BIT_WL;
 					usart.USARTx_Config.USART_StopBit = ONE_STOP_BIT;
@@ -34,21 +41,15 @@ int main(void){
 
 					USART_Init(&usart);
 
-	while(1){
-		for (volatile int i = 1000; i <= 2000; i+=10){
-			TIM2->CCR1 = i;
-			USART_SendNumber(&usart, i);
-			USART_SendChar(&usart, '\n');
-			Delay_ms(20);
-		}
-
-		for (volatile int i = 2000; i>=1000; i-=10){
-			TIM2->CCR1 = i;
-			USART_SendNumber(&usart, i);
-			USART_SendChar(&usart, '\n');
-			Delay_ms(20);
-		}
-	}
+				while(1){
+					char buf[40];
+					Servo_command cmd;
+					USART_ReceiveLine(&usart, buf, 40);
+					if(buf[0] == '$'){
+					    USART_ParseData(buf, &cmd);
+					    USART_ServoCommand(&cmd, TIM2, TIM3);
+					}
+				}
 
 	return 0;
 }

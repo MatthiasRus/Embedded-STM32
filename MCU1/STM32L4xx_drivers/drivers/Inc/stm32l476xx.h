@@ -93,7 +93,7 @@
 /*----------------------------------RIMx Addresses------------------------------------------*/
 
 #define TIM2_BASE_ADDR							(PERIPH_BASE  + 0x0000)
-
+#define TIM3_BASE_ADDR							(PERIPH_BASE  + 0x0400)
 
 /* ---------------------peripheral register definition structures------------------------*/
 
@@ -359,10 +359,14 @@ typedef struct {
 /*=============================USART ADDRESS REgion=====================================*/
 
 #define USART2              					((USART_RegDef_t*)USART2_BASE_ADDR)
+#define USART3 									((USART_RegDef_t*)USART3_BASE_ADDR)
 
 // ==================================TIM Pointer Initialization======================================
 #define TIM2_PCLK_EN()							(RCC->APB1ENR1 |= (1 << 0))
 #define TIM2									((TIM_RegDef_t*)TIM2_BASE_ADDR)
+
+#define TIM3_PCLK_EN()							(RCC->APB1ENR1  |= (1 << 1))
+#define TIM3									((TIM_RegDef_t*)TIM3_BASE_ADDR)
 /*	-------------------------clock enable macros for GPIOx------------------------------------*/
 
 #define GPIOA_PCLK_EN()					(RCC->AHB2ENR |= (1 << 0))

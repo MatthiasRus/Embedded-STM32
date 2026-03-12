@@ -74,10 +74,23 @@ typedef struct {
 }USART_Handle_t;
 
 
+typedef struct{
+	uint8_t channel;
+	uint16_t pulse_us;
+}Servo_command;
+
 void USART_Init(USART_Handle_t *pUSARTxHandle);
 void USART_DeInit(USART_RegDef_t *pUSARTx);
+
+// Transmitting Data
 void USART_SendData(USART_Handle_t *pUSARTxHandle, uint8_t *pTxBuffer, uint32_t Len);
 void USART_SendChar(USART_Handle_t *pUSARTxHandle, char c);
 void USART_SendString(USART_Handle_t *pUSARTxHandle, char *str);
 void USART_SendNumber(USART_Handle_t *pUSARTxHandle, int num);
+
+// Receive data
+uint8_t USART_ReceiveChar(USART_Handle_t *h);
+void USART_ReceiveLine(USART_Handle_t *h, char *buf, uint32_t maxLen);
+void USART_ParseData(char *buf , Servo_command *cmd);
+void USART_ServoCommand(Servo_command *cmd, TIM_RegDef_t *pTIM2, TIM_RegDef_t *pTIM3);
 #endif /* INC_STM32L476XX_USART_DRIVER_H_ */

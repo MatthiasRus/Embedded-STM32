@@ -12,6 +12,19 @@
 void USART_Init(USART_Handle_t *pUSARTxHandle){
 		// Step 1: Enable USART2 peripheral clock
 			USART2_PCLK_EN();
+
+		// step 1.1 GPIO pa2 init af7
+			GPIO_Handle_t GPIO_UART;
+				GPIO_UART.pGPIOx = GPIOA;
+				GPIO_UART.GPIO_PIN_Config.GPIO_PinMode = GPIO_MODE_ALTFN;
+				GPIO_UART.GPIO_PIN_Config.GPIO_AltFunMode = 7;
+				GPIO_UART.GPIO_PIN_Config.GPIO_PinNumber = 2;
+				GPIO_UART.GPIO_PIN_Config.GPIO_PinSpeed = GPIO_SP_HIGH;
+				GPIO_UART.GPIO_PIN_Config.GPIO_PinPuPdControl = GPIO_NO_PUPD;
+				GPIO_UART.GPIO_PIN_Config.GPIO_OPType = GPIO_OP_TYPE_PP;
+
+
+				GPIO_Init(&GPIO_UART);
 	    // Step 2: Configure word length, parity, mode in CR1
 			if (pUSARTxHandle->USARTx_Config.USART_WordLength == SEVEN_BIT_WL){
 				pUSARTxHandle->USARTx->CR1   |= (1 << 28);

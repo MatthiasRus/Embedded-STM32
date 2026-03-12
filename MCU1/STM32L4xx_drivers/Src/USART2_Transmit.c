@@ -25,17 +25,7 @@ int main(void){
 			__asm volatile("DSB");
 			__asm volatile("ISB");
 			SysTick_Init();
-	GPIO_Handle_t GPIO_UART;
-	GPIO_UART.pGPIOx = GPIOA;
-	GPIO_UART.GPIO_PIN_Config.GPIO_PinMode = GPIO_MODE_ALTFN;
-	GPIO_UART.GPIO_PIN_Config.GPIO_AltFunMode = 7;
-	GPIO_UART.GPIO_PIN_Config.GPIO_PinNumber = 2;
-	GPIO_UART.GPIO_PIN_Config.GPIO_PinSpeed = GPIO_SP_HIGH;
-	GPIO_UART.GPIO_PIN_Config.GPIO_PinPuPdControl = GPIO_NO_PUPD;
-	GPIO_UART.GPIO_PIN_Config.GPIO_OPType = GPIO_OP_TYPE_PP;
 
-
-	GPIO_Init(&GPIO_UART);
 
 
 	USART_Handle_t usart;
@@ -79,12 +69,18 @@ int main(void){
 		int temp_dec = (int)((temperature - (float)temp_int) * 100);
 		if(temp_dec < 0) temp_dec = -temp_dec;  // absolute value
 
-		USART_SendString(&usart, "T: ");
-		USART_SendNumber(&usart, temp_int);
+//		USART_SendString(&usart, "T: ");
+//		USART_SendNumber(&usart, temp_int);
+//		USART_SendChar(&usart, '.');
+//		if(temp_dec < 10) USART_SendChar(&usart, '0');  // leading zero
+//		USART_SendNumber(&usart, temp_dec);
+//		USART_SendString(&usart, " C\r\n");
+
+		USART_SendChar(&usart, '$');
+		USART_SendNumber(&usart, (int)temperature);
 		USART_SendChar(&usart, '.');
-		if(temp_dec < 10) USART_SendChar(&usart, '0');  // leading zero
-		USART_SendNumber(&usart, temp_dec);
-		USART_SendString(&usart, " C\r\n");
+		USART_SendNumber(&usart, (int)((temperature - (int)temperature) * 100));
+		USART_SendChar(&usart, '\n');
 		Delay_ms(1000);
 	}
 

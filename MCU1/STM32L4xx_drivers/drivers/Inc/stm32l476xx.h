@@ -87,12 +87,13 @@
 #define SLAVE_ADC_OFFSET						     0x100
 #define MS_COMMON_ADC_OFFSET					 	 0x300
 
-#define ADC1_BASE_ADDR    (0x50040000U)
-#define ADC_COMM_ADDR     (0x50040300U)
-/*--------------------------------------------------------------------------------------*/
-/*=============================USART ADDRESS REgion=====================================*/
+#define ADC1_BASE_ADDR    						(0x50040000U)
+#define ADC_COMM_ADDR     						(0x50040300U)
 
-#define USART2              ((USART_RegDef_t*)USART2_BASE_ADDR)
+/*----------------------------------RIMx Addresses------------------------------------------*/
+
+#define TIM2_BASE_ADDR							(PERIPH_BASE  + 0x0000)
+
 
 /* ---------------------peripheral register definition structures------------------------*/
 
@@ -290,6 +291,32 @@ typedef struct {
 	__vo uint32_t TDR;
 } USART_RegDef_t;
 
+
+
+typedef struct {
+	__vo uint32_t CR1;
+	__vo uint32_t CR2;
+	__vo uint32_t SMCR;
+	__vo uint32_t DIER;
+	__vo uint32_t SR;
+	__vo uint32_t EGR;
+	__vo uint32_t CCMR1;
+	__vo uint32_t CCMR2;
+	__vo uint32_t CCER;
+	__vo uint32_t CNT;
+	__vo uint32_t PSC;
+	__vo uint32_t ARR;
+		 uint32_t Reserved;
+	__vo uint32_t CCR1;
+	__vo uint32_t CCR2;
+	__vo uint32_t CCR3;
+	__vo uint32_t CCR4;
+	 	 uint32_t Reserved2;
+	__vo uint32_t DCR;
+	__vo uint32_t DMAR;
+	__vo uint32_t OR1;
+	__vo uint32_t OR2;
+} TIM_RegDef_t;
 /* ----------------------------Peripheral addresses defined (GPIO_RegDef)------------------------*/
 
 #define GPIOA									((GPIO_RegDef_t*)GPIOA_BASE_ADDR)
@@ -326,8 +353,16 @@ typedef struct {
 #define ADC1_COMMON       						((ADC_ComRegDef_t*)ADC_COMM_ADDR)
 
 
-#define ADC1_PCLK_EN()    (RCC->AHB2ENR |= (1 << 13))
-#define ADC1_REG_RESET()  do { (RCC->AHB2RSTR |= (1 << 13));  RCC->AHB2RSTR &= ~(1 << 13)); } while(0)
+#define ADC1_PCLK_EN()    						(RCC->AHB2ENR |= (1 << 13))
+#define ADC1_REG_RESET()  						do { (RCC->AHB2RSTR |= (1 << 13));  RCC->AHB2RSTR &= ~(1 << 13); } while(0)
+
+/*=============================USART ADDRESS REgion=====================================*/
+
+#define USART2              					((USART_RegDef_t*)USART2_BASE_ADDR)
+
+// ==================================TIM Pointer Initialization======================================
+#define TIM2_PCLK_EN()							(RCC->APB1ENR1 |= (1 << 0))
+#define TIM2									((TIM_RegDef_t*)TIM2_BASE_ADDR)
 /*	-------------------------clock enable macros for GPIOx------------------------------------*/
 
 #define GPIOA_PCLK_EN()					(RCC->AHB2ENR |= (1 << 0))
@@ -605,5 +640,6 @@ typedef struct {
 #include "stm32l476xx_i2c_driver.h"
 #include "stm32l476xx_adc_driver.h"
 #include "stm32l476xx_usart_driver.h"
+#include <stm32l476xx_TIMx_driver.h>
 #include "systick.h"
 #endif /* INC_STM32L476XX_H_ */

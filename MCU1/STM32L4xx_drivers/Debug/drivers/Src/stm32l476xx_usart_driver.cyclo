@@ -1,6 +1,6 @@
 ../drivers/Src/stm32l476xx_usart_driver.c:12:6:USART_Init	19
-../drivers/Src/stm32l476xx_usart_driver.c:123:6:USART_DeInit	1
-../drivers/Src/stm32l476xx_usart_driver.c:128:6:USART_SendData	4
-../drivers/Src/stm32l476xx_usart_driver.c:138:6:USART_SendChar	2
-../drivers/Src/stm32l476xx_usart_driver.c:143:6:USART_SendString	3
-../drivers/Src/stm32l476xx_usart_driver.c:151:6:USART_SendNumber	4
+../drivers/Src/stm32l476xx_usart_driver.c:136:6:USART_DeInit	1
+../drivers/Src/stm32l476xx_usart_driver.c:141:6:USART_SendData	4
+../drivers/Src/stm32l476xx_usart_driver.c:151:6:USART_SendChar	2
+../drivers/Src/stm32l476xx_usart_driver.c:156:6:USART_SendString	3
+../drivers/Src/stm32l476xx_usart_driver.c:164:6:USART_SendNumber	4

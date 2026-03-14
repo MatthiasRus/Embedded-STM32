@@ -1,0 +1,5 @@
+../drivers/Src/stm32l476xx_i2c.c:3:6:I2C_Periph_ClockControl	16	static
+../drivers/Src/stm32l476xx_i2c.c:24:6:I2C_Init	40	static
+../drivers/Src/stm32l476xx_i2c.c:59:6:I2C_DeInit	16	static
+../drivers/Src/stm32l476xx_i2c.c:72:6:I2C_PeripheralControl	16	static
+../drivers/Src/stm32l476xx_i2c.c:80:6:I2C_MasterSendData	32	static

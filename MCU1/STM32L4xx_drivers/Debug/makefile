@@ -10,6 +10,7 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include drivers/Src/subdir.mk
+-include drivers/Inc/subdir.mk
 -include Startup/subdir.mk
 -include Src/subdir.mk
 -include objects.mk
@@ -60,8 +61,8 @@ all: main-build
 main-build: STM32L4xx_drivers.elf secondary-outputs
 
 # Tool invocations
-STM32L4xx_drivers.elf STM32L4xx_drivers.map: $(OBJS) $(USER_OBJS) /media/mat-ros/Windows/Users/matth_ik1hap6/Robotics/Embedded/MCU1/STM32L4xx_drivers/STM32L476RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "STM32L4xx_drivers.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/media/mat-ros/Windows/Users/matth_ik1hap6/Robotics/Embedded/MCU1/STM32L4xx_drivers/STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32L4xx_drivers.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+STM32L4xx_drivers.elf STM32L4xx_drivers.map: $(OBJS) $(USER_OBJS) /home/mat-ros/Desktop/Embedded/STM32L4xx_drivers/STM32L476RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "STM32L4xx_drivers.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/mat-ros/Desktop/Embedded/STM32L4xx_drivers/STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM32L4xx_drivers.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

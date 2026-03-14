@@ -202,6 +202,22 @@ uint8_t USART_ReceiveChar(USART_Handle_t *h){
 
 }
 
+//void USART_ReceiveLine(USART_Handle_t *h, char *buf, uint32_t maxLen){
+//    uint32_t i = 0;
+//    char c;
+//
+//    // wait for '$'
+//    do { c = USART_ReceiveChar(h); } while(c != '$');
+//    buf[i++] = '$';
+//
+//    // read rest until newline
+//    while(i < maxLen - 1){
+//        c = USART_ReceiveChar(h);
+//        if(c == '\n' || c == '\r') break;
+//        buf[i++] = c;
+//    }
+//    buf[i] = '\0';
+//}
 void USART_ReceiveLine(USART_Handle_t *h, char *buf, uint32_t maxLen){
     uint32_t i = 0;
     char c;
@@ -210,10 +226,10 @@ void USART_ReceiveLine(USART_Handle_t *h, char *buf, uint32_t maxLen){
     do { c = USART_ReceiveChar(h); } while(c != '$');
     buf[i++] = '$';
 
-    // read rest until newline
+    // read until next '$' or newline
     while(i < maxLen - 1){
         c = USART_ReceiveChar(h);
-        if(c == '\n' || c == '\r') break;
+        if(c == '\n' || c == '\r' || c == '$') break;
         buf[i++] = c;
     }
     buf[i] = '\0';
@@ -229,7 +245,7 @@ void USART_ParseData(char *buf, Servo_command *cmd){
 }
 
 void USART_ServoCommand(Servo_command *cmd, TIM_RegDef_t *pTIM2, TIM_RegDef_t *pTIM3){
-	if (cmd->pulse_us >= 1000 || cmd->pulse_us<=2000){
+	if (cmd->pulse_us >= 1000 && cmd->pulse_us<=2000){
 		switch(cmd->channel){
         case 1: pTIM2->CCR1 = cmd->pulse_us; break;
         case 2: pTIM2->CCR2 = cmd->pulse_us; break;

@@ -42,13 +42,23 @@ int main(void){
 					USART_Init(&usart);
 
 				while(1){
-					char buf[40];
+					char buf[50];
 					Servo_command cmd;
-					USART_ReceiveLine(&usart, buf, 40);
+					USART_ReceiveLine(&usart, buf, 50);
 					if(buf[0] == '$'){
 					    USART_ParseData(buf, &cmd);
 					    USART_ServoCommand(&cmd, TIM2, TIM3);
 					}
+
+					// debug echo
+					    USART_SendString(&usart, "Received: ");
+					    USART_SendString(&usart, buf);
+					    USART_SendChar(&usart, '\n');
+					    USART_SendString(&usart, "Channel: ");
+					    USART_SendNumber(&usart, cmd.channel);
+					    USART_SendString(&usart, " Pulse: ");
+					    USART_SendNumber(&usart, cmd.pulse_us);
+					    USART_SendChar(&usart, '\n');
 				}
 
 	return 0;

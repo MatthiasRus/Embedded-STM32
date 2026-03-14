@@ -1,2 +1,0 @@
-../drivers/Src/stm32l476xx_TIMx_driver.c:13:6:PWM_TIM2_Init	1
-../drivers/Src/stm32l476xx_TIMx_driver.c:75:6:PWM_TIM3_Init	1

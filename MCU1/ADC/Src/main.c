@@ -15,22 +15,101 @@
  *
  ******************************************************************************
  */
-
+#include <stdio.h>
 #include <stdint.h>
-#define ADC_BASE_ADDRESS  				0x50040000UL
-#define ADC_OFFSET						0x08UL
-#define ADC_CREG_ADDRESS    			(ADC_BASE_ADDRESS + ADC_OFFSET)
 
-#define RCC_BASE_ADDRESS				0x40021000UL
-#define RCC_AHB2_ENR_OFFSET				0x4CUL
-#define RCC_AHB2_ENR_ADDR				(RCC_BASE_ADDRESS + RCC_AHB2_ENR_OFFSET)
+//#define ADC_BASE_ADDRESS  				0x50040000UL
+//#define ADC_OFFSET						0x08UL
+//#define ADC_CREG_ADDRESS    			(ADC_BASE_ADDRESS + ADC_OFFSET)
+//
+//#define RCC_BASE_ADDRESS				0x40021000UL
+//#define RCC_AHB2_ENR_OFFSET				0x4CUL
+//#define RCC_AHB2_ENR_ADDR				(RCC_BASE_ADDRESS + RCC_AHB2_ENR_OFFSET)
+//
+
+
+#define __vo    								volatile
+#define RCC_BASE_ADDR           0x40021000
+//#define RCC_AHB2RSTR            (*(__vo uint32_t *)(RCC_BASE_ADDR + 0x2C))
+
+#define ADC_ADDR                0x50040000
+#define AHB2ENR_OFFSET          0x4C
+#define AHB2_ADC_ADDR           (*(__vo uint32_t *)(RCC_BASE_ADDR + AHB2ENR_OFFSET))
+
+#define ADC_CCR                 (*(__vo uint32_t *)(ADC_ADDR + 0x308))
+#define ADC_CR                  (*(__vo uint32_t *)(ADC_ADDR + 0x08))
+#define ADC_CFGR                (*(__vo uint32_t *)(ADC_ADDR + 0x0C))
+#define ADC_SQR1                (*(__vo uint32_t *)(ADC_ADDR + 0x30))
+#define ADC_DR                  (*(__vo uint32_t *)(ADC_ADDR + 0x40))
+#define ADC_ISR                 (*(__vo uint32_t *)(ADC_ADDR + 0x00))
+#define TS_CAL1                 (*(__vo uint16_t *)0x1FFF75A8) // Calibration value at 30°C
+#define TS_CAL2                 (*(__vo uint16_t *)0x1FFF75CA) // Calibration value at 110°C
+#define ADC_SMPR1               (*(__vo uint32_t *)(ADC_ADDR + 0x14))
+#define RCC_CCIPR               (*(__vo uint32_t *)(RCC_BASE_ADDR + 0x88))
+
+//UART_HandleTypeDef huart2;
+static void MX_ADC1_Init(void);
+/* USER CODE BEGIN PV */
+char uart_buf[64];
 int main(void)
 {
-    uint32_t *padc_addr = (uint32_t*)ADC_CREG_ADDRESS;
-    uint32_t *pahb2_addr = (uint32_t*)RCC_AHB2_ENR_ADDR;
-    // first enabling peripheral
-    *pahb2_addr |= (1 << 13);
-    // setting the adc port 1
-    *padc_addr |= (1 << 30);
+//    uint32_t *padc_addr = (uint32_t*)ADC_CREG_ADDRESS;
+//    uint32_t *pahb2_addr = (uint32_t*)RCC_AHB2_ENR_ADDR;
+//    // first enabling peripheral
+//    *pahb2_addr |= (1 << 13);
+//    // setting the adc port 1
+//    *padc_addr |= (1 << 30);
+	MX_ADC1_Init();
+    ADC_CR |= (1U << 2);                    // ADSTART
+        while (!(ADC_ISR & (1U << 2)));         // wait EOC
+        uint16_t adc_value = (uint16_t)(ADC_DR & 0x0FFF);
 
+        float temperature =
+            ((110.0f - 30.0f) / ((float)TS_CAL2 - (float)TS_CAL1)) *
+            ((float)adc_value - (float)TS_CAL1) + 30.0f;
+        	printf("%.5d", temperature);
+//        HAL_UART_Transmit(&huart2, (uint8_t *)uart_buf,
+//            snprintf(uart_buf, sizeof(uart_buf), "Temperature: %.2f C\r\n", temperature),
+//            100);
+//
+//        HAL_Delay(100);
+
+}
+
+static void MX_ADC1_Init(void) {
+    // 1) Enable ADC bus clock
+    AHB2_ADC_ADDR |= (1U << 13);
+
+    // 2) Select ADC kernel clock (ADCSEL = 11: SYSCLK)  <-- critical for ADCAL
+    RCC_CCIPR &= ~(3U << 28);
+    RCC_CCIPR |=  (3U << 28);
+
+    // 3) Reset ADC block
+
+
+    // 4) Exit deep-power-down and enable regulator
+    ADC_CR &= ~(1U << 29);      // DEEPPWD = 0
+    ADC_CR |=  (1U << 28);      // ADVREGEN = 1
+    for (volatile uint32_t i = 0; i < 2000; i++) ; // >20us
+
+    // 5) Ensure ADC disabled (proper way)
+    if (ADC_CR & (1U << 0)) {   // ADEN set?
+        ADC_CR |= (1U << 1);    // ADDIS
+        while (ADC_CR & (1U << 0));
+    }
+
+    // 6) Start calibration
+    ADC_CR |= (1U << 31);       // ADCAL
+    while (ADC_CR & (1U << 31));
+
+    // 7) Temp sensor enable + long sample time for CH17
+    ADC_CCR |= (1U << 23);      // TSEN
+    ADC_SMPR1 &= ~(7U << 21);
+    ADC_SMPR1 |=  (7U << 21);   // max SMP for channel 17
+    ADC_SQR1 = (17U << 6);      // SQ1 = CH17, L=0 (1 conversion)
+
+    // 8) Enable ADC
+    ADC_ISR |= (1U << 0);       // clear ADRDY
+    ADC_CR  |= (1U << 0);       // ADEN
+    while (!(ADC_ISR & (1U << 0)));
 }

@@ -23,7 +23,7 @@
 #endif
 int main(void)
 {
-	for (int i = 0; i<4; i++){
+	for (int i = 0; i<40; i++){
 		printf("Hello Embedded World\n");
 		printf("I was feeling less of a man.\n");
 	}

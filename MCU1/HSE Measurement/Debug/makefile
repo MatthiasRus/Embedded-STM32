@@ -59,8 +59,8 @@ all: main-build
 main-build: HSE\ Measurement.elf secondary-outputs
 
 # Tool invocations
-HSE\ Measurement.elf HSE\ Measurement.map: $(OBJS) $(USER_OBJS) C:\Users\matth_ik1hap6\Robotics\Embedded\MCU1\HSE\ Measurement\STM32L476RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "HSE Measurement.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\matth_ik1hap6\Robotics\Embedded\MCU1\HSE Measurement\STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="HSE Measurement.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+HSE\ Measurement.elf HSE\ Measurement.map: $(OBJS) $(USER_OBJS) /media/mat-ros/Windows/Users/matth_ik1hap6/Robotics/Embedded/MCU1/HSE\ Measurement/STM32L476RGTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "HSE Measurement.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/media/mat-ros/Windows/Users/matth_ik1hap6/Robotics/Embedded/MCU1/HSE Measurement/STM32L476RGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="HSE Measurement.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

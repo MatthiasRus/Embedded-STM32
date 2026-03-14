@@ -1,4 +1,0 @@
-../drivers/Src/systick.c:8:6:SysTick_Init	1
-../drivers/Src/systick.c:18:6:SysTick_Handler	1
-../drivers/Src/systick.c:22:10:GetTick	1
-../drivers/Src/systick.c:26:6:Delay_ms	2

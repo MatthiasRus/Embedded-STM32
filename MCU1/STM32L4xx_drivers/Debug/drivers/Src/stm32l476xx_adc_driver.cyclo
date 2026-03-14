@@ -1,3 +1,0 @@
-../drivers/Src/stm32l476xx_adc_driver.c:12:6:ADC_Init	13
-../drivers/Src/stm32l476xx_adc_driver.c:84:6:ADC_DeInit	1
-../drivers/Src/stm32l476xx_adc_driver.c:89:10:ADC_ReadData	2

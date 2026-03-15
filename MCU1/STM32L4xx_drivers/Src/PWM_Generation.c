@@ -17,6 +17,7 @@ int main(void){
 				RCC->CFGR &= ~(3 << 0);
 				RCC->CFGR |= (1 << 0);
 				while((RCC->CFGR & (3 << 2)) != (1 << 2));
+
                 SysTick_Init();
 				TIM_Handle_t tim2;
 				TIM_Handle_t tim3;

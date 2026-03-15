@@ -520,6 +520,7 @@ typedef struct {
 // General Macros
 #define ENABLE 								1
 #define DISABLE 							0
+#define NULL								0
 #define SET									ENABLE
 #define RESET								DISABLE
 

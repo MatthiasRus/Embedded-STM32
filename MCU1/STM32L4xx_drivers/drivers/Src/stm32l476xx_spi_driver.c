@@ -1,5 +1,5 @@
 
-#include "stm32l476xx_spi_driver.h"
+#include "stm32l476xx.h"
 
 uint8_t SPI_Get_FlagStatus(SPI_RegDef_t *pSPIx, uint32_t Flag_Name){
 	if (pSPIx->SR & Flag_Name){
@@ -69,6 +69,25 @@ void SPI_Init(SPI_Handle_t *pSPIHandle){
 
 	pSPIHandle->pSPIx->CR1 = tempReg;
 
+
+	// Now we have to configure the FRXTH -> FIFO recp. threshold
+	if (pSPIHandle->SPI_Config.SPI_DFF == SPI_DFF_8BITS){
+		pSPIHandle->pSPIx->CR2   |=  (1 << SPI_CR2_FRXTH);
+	}else{
+		pSPIHandle->pSPIx->CR2   &= ~(1 << SPI_CR2_FRXTH);
+	}
+
+	// Now let's set DS bits
+
+	if (pSPIHandle->SPI_Config.SPI_DFF  == SPI_DFF_8BITS){
+		pSPIHandle->pSPIx->CR2   &= ~(0xF  << SPI_CR2_DATASIZE);
+		pSPIHandle->pSPIx->CR2   |=  (0x7 << SPI_CR2_DATASIZE);
+	}else if (pSPIHandle->SPI_Config.SPI_DFF  == SPI_DFF_16BITS){
+		pSPIHandle->pSPIx->CR2   &= ~(0xF  << SPI_CR2_DATASIZE);
+		pSPIHandle->pSPIx->CR2   |=  (0xF << SPI_CR2_DATASIZE);
+	}
+
+
 }
 void SPI_DeInit(SPI_RegDef_t *pSPIx){
 	// Peripheral clock Reset in one go
@@ -86,19 +105,21 @@ void SPI_DeInit(SPI_RegDef_t *pSPIx){
 
 /*				Polling OR Blocking Call */
 void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len){
-
+		//Memory Corruption Guard
+		if((pSPIx->CR1 & (1 << SPI_CR1_DFF)) && (Len % 2 != 0)) return;  // silently reject bad input
 		while (Len > 0){
 			// Let's Wait until TXE is Set
 			while (SPI_Get_FlagStatus(pSPIx, SPI_TXE_FLAG) == FLAG_RESET);
 
-			// check the DFF
+			// check the DFF  CRC (Cyclic Redundancy Check)
 			if (pSPIx->CR1 & (1 << SPI_CR1_DFF)){
 				// 16 Bit field
 				// load the data on the data register
 				pSPIx->DR = *((uint16_t*)pTxBuffer);
 				Len--;Len--; // We just have loaded two bytes of data
 				// We have to move pointer to the next data address
-				(uint16_t*)pTxBuffer++; // will be shifted 2 bytes due to the type casting
+//				(uint16_t*)pTxBuffer++; // will be shifted 2 bytes due to the type casting
+				pTxBuffer += 2;
 			}else{
 				// 8 bit field
 				pSPIx->DR = *(pTxBuffer);
@@ -109,11 +130,12 @@ void SPI_SendData(SPI_RegDef_t *pSPIx, uint8_t *pTxBuffer, uint32_t Len){
 
 		}
 }
+
 void SPI_RecieveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len){
 	while(Len > 0)
 			{
 				//1. wait until RXNE is set
-				while(SPI_GetFlagStatus(pSPIx,SPI_RXNE_FLAG)  == (uint8_t)FLAG_RESET );
+				while(SPI_Get_FlagStatus(pSPIx,SPI_RXNE_FLAG)  == (uint8_t)FLAG_RESET );
 
 				//2. check the DFF bit in CR1
 				if( (pSPIx->CR1 & ( 1 << SPI_CR1_DFF) ) )
@@ -123,7 +145,8 @@ void SPI_RecieveData(SPI_RegDef_t *pSPIx, uint8_t *pRxBuffer, uint32_t Len){
 					 *((uint16_t*)pRxBuffer) = pSPIx->DR ;
 					Len--;
 					Len--;
-					(uint16_t*)pRxBuffer++;
+//					(uint16_t*)pRxBuffer++;
+					pRxBuffer += 2;
 				}else
 				{
 					//8 bit DFF
@@ -288,7 +311,9 @@ static void  spi_txe_interrupt_handle(SPI_Handle_t *pSPIHandle)
 		pSPIHandle->pSPIx->DR =   *((uint16_t*)pSPIHandle->pTxBuffer);
 		pSPIHandle->TxLen--;
 		pSPIHandle->TxLen--;
-		(uint16_t*)pSPIHandle->pTxBuffer++;
+//		(uint16_t*)pSPIHandle->pTxBuffer++;
+		pSPIHandle->pTxBuffer += 2;
+
 	}else
 	{
 		//8 bit DFF
@@ -304,7 +329,7 @@ static void  spi_txe_interrupt_handle(SPI_Handle_t *pSPIHandle)
 
 		//this prevents interrupts from setting up of TXE flag
 		SPI_CloseTransmisson(pSPIHandle);
-		SPI_ApplicationEventCallback(pSPIHandle,SPI_EVENT_TX_CMPLT);
+//		SPI_ApplicationEventCallback(pSPIHandle,SPI_EVENT_TX_CMPLT);
 	}
 
 }
@@ -318,8 +343,7 @@ static void  spi_rxne_interrupt_handle(SPI_Handle_t *pSPIHandle)
 		//16 bit
 		*((uint16_t*)pSPIHandle->pRxBuffer) = (uint16_t) pSPIHandle->pSPIx->DR;
 		pSPIHandle->RxLen -= 2;
-		pSPIHandle->pRxBuffer++;
-		pSPIHandle->pRxBuffer++;
+		pSPIHandle->pRxBuffer += 2;
 
 	}else
 	{
@@ -333,7 +357,7 @@ static void  spi_rxne_interrupt_handle(SPI_Handle_t *pSPIHandle)
 	{
 		//reception is complete
 		SPI_CloseReception(pSPIHandle);
-		SPI_ApplicationEventCallback(pSPIHandle,SPI_EVENT_RX_CMPLT);
+//		SPI_ApplicationEventCallback(pSPIHandle,SPI_EVENT_RX_CMPLT);
 	}
 
 }
@@ -351,7 +375,7 @@ static void  spi_ovr_err_interrupt_handle(SPI_Handle_t *pSPIHandle)
 	}
 	(void)temp;
 	//2. inform the application
-	SPI_ApplicationEventCallback(pSPIHandle,SPI_EVENT_OVR_ERR);
+//	SPI_ApplicationEventCallback(pSPIHandle,SPI_EVENT_OVR_ERR);
 
 }
 
@@ -387,8 +411,8 @@ void SPI_ClearOVRFlag(SPI_RegDef_t *pSPIx)
 
 
 
-__weak void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIHandle,uint8_t AppEv)
-{
-
-	//This is weak implementation
-}
+// void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIHandle,uint8_t AppEv)
+//{
+//
+//	//This is weak implementation
+//}

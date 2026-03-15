@@ -140,7 +140,7 @@ void SPI_SSOEConfig(SPI_RegDef_t *pSPIx, uint8_t EnOrDi);
 void SPI_CloseTransmisson(SPI_Handle_t *pSPIHandle);
 void SPI_CloseReception(SPI_Handle_t *pSPIHandle);
 
-void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIHandle,uint8_t AppEv);
+//__weak void SPI_ApplicationEventCallback(SPI_Handle_t *pSPIHandle,uint8_t AppEv);
 
 uint8_t SPI_Get_FlagStatus(SPI_RegDef_t *pSPIx, uint32_t Flag_Name);
 #endif /* INC_STM32L476XX_SPI_DRIVER_H_ */

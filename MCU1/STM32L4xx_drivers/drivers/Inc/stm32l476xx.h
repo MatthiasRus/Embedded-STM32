@@ -318,6 +318,48 @@ typedef struct {
 	__vo uint32_t OR1;
 	__vo uint32_t OR2;
 } TIM_RegDef_t;
+
+typedef struct {
+		__vo uint32_t ISR;
+		__vo uint32_t IFCR;
+		__vo uint32_t CCR1;
+		__vo uint32_t CNDTR1;
+		__vo uint32_t CPAR1;
+		__vo uint32_t CMAR1;
+			 uint32_t reserved1;
+		__vo uint32_t CCR2;
+		__vo uint32_t CNDTR2;
+		__vo uint32_t CPAR2;
+		__vo uint32_t CMAR2;
+		 	 uint32_t reserved2;
+		__vo uint32_t CCR3;
+		__vo uint32_t CNDTR3;
+		__vo uint32_t CPAR3;
+		__vo uint32_t CMAR3;
+	 	 	 uint32_t reserved3;
+		__vo uint32_t CCR4;
+		__vo uint32_t CNDTR4;
+		__vo uint32_t CPAR4;
+		__vo uint32_t CMAR4;
+	 	 	 uint32_t reserved4;
+		__vo uint32_t CCR5;
+		__vo uint32_t CNDTR5;
+		__vo uint32_t CPAR5;
+		__vo uint32_t CMAR5;
+			 uint32_t reserved5;
+		__vo uint32_t CCR6;
+		__vo uint32_t CNDTR6;
+		__vo uint32_t CPAR6;
+		__vo uint32_t CMAR6;
+			 uint32_t reserved6;
+		__vo uint32_t CCR7;
+		__vo uint32_t CNDTR7;
+		__vo uint32_t CPAR7;
+		__vo uint32_t CMAR7;
+			 uint32_t reserved7;
+		__vo uint32_t CSELR;
+
+}DMA_RegDef_t;
 /* ----------------------------Peripheral addresses defined (GPIO_RegDef)------------------------*/
 
 #define GPIOA									((GPIO_RegDef_t*)GPIOA_BASE_ADDR)

@@ -136,7 +136,6 @@ typedef struct {
 			    __vo uint32_t AHB3ENR;
 			         uint32_t reserved9;
 			    __vo uint32_t APB1ENR1;
-		    	 	 uint32_t reserved4;
 			    __vo uint32_t APB1ENR2;
 			    __vo uint32_t APB2ENR;
 		    	 	 uint32_t reserved5;
@@ -152,6 +151,8 @@ typedef struct {
 		    	 	 uint32_t reserved8;
 			    __vo uint32_t BDCR;
 			    __vo uint32_t CSR;
+			    __vo uint32_t CRRCR;
+			    __vo uint32_t CCIPR2;
 
 }RCC_RegDef_t;
 
@@ -437,8 +438,8 @@ typedef struct {
 #define USART3_PCLK_DI()					(RCC->APB1ENR1 &= ~(1 << 18))
 #define USART1_PCLK_DI()					(RCC->APB2ENR  &= ~(1 << 14))
 
-#define UART4_PCLK_DI()					(RCC->APB1ENR1 &= ~(1 << 19))
-#define UART5_PCLK_DI()					(RCC->APB1ENR1 &= ~(1 << 20))
+#define UART4_PCLK_DI()						(RCC->APB1ENR1 &= ~(1 << 19))
+#define UART5_PCLK_DI()						(RCC->APB1ENR1 &= ~(1 << 20))
 
 /*--------------------------clock disable MACROS for SYSCFG---------------------------------------*/
 
@@ -495,7 +496,14 @@ typedef struct {
 /*---------------------------------Interrupt Request Number for SPI---------------------------------------------------*/
 #define IRQ_NO_SPI1					35
 #define IRQ_NO_SPI2					36
-#define IRQ_NO_SPI3					53
+#define IRQ_NO_SPI3					51
+
+/*==================================Intrrupt Request Number for USART/UART============================================*/
+#define IRQ_NO_USART1				37
+#define IRQ_NO_USART2				38
+#define IRQ_NO_USART3				39
+
+/*==================================NVIC Interrupt Request Priority Numbers==============================================*/
 
 #define NVIC_IRQ_PRI0				0
 #define NVIC_IRQ_PRI1				1
@@ -513,8 +521,6 @@ typedef struct {
 #define NVIC_IRQ_PRI13				13
 #define NVIC_IRQ_PRI14				14
 #define NVIC_IRQ_PRI15				15
-
-
 
 
 // General Macros

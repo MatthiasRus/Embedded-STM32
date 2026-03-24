@@ -40,11 +40,11 @@ int main(void){
 	                PCA9685_Init(&I2C_Master);
 
 	                while(1){
-	                	PCA9685_SetPulse(&I2C_Master, 0,1000);
+	                	PCA9685_SetPulse(&I2C_Master, 1,2000);
 	                	Delay_ms(500);
-	                	PCA9685_SetPulse(&I2C_Master, 0, 1500);
+	                	PCA9685_SetPulse(&I2C_Master, 1, 1000);
 	                	Delay_ms(500);
-	                	PCA9685_SetPulse(&I2C_Master, 0,2000);
+	                	PCA9685_SetPulse(&I2C_Master, 1,1000);
 	                	Delay_ms(500);
 	                }
 

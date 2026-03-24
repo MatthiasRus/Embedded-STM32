@@ -57,14 +57,14 @@ void USART_Init(USART_Handle_t *pUSARTxHandle){
 			if (pUSARTxHandle->USARTx_Config.USART_Mode == USART_MODE_TX_ONLY){
 							pUSARTxHandle->USARTx->CR1   |= (1 << 3);
 
-						}else if (pUSARTxHandle->USARTx_Config.USART_Mode == USART_MODE_RX_ONLY){
+			}else if (pUSARTxHandle->USARTx_Config.USART_Mode == USART_MODE_RX_ONLY){
 							pUSARTxHandle->USARTx->CR1   |= (1 << 2);
 
-						}else if (pUSARTxHandle->USARTx_Config.USART_Mode == USART_MODE_TX_RX){
+			}else if (pUSARTxHandle->USARTx_Config.USART_Mode == USART_MODE_TX_RX){
 							pUSARTxHandle->USARTx->CR1   |= (1 << 2);
 							pUSARTxHandle->USARTx->CR1   |= (1 << 3);
 
-						}else{
+			}else{
 
 						}
 
@@ -88,20 +88,19 @@ void USART_Init(USART_Handle_t *pUSARTxHandle){
 							pUSARTxHandle->USARTx->CR2   &= ~(1 << 13);
 							pUSARTxHandle->USARTx->CR2   &= ~(1 << 12);
 
-						}else if (pUSARTxHandle->USARTx_Config.USART_StopBit == TWO_STOP_BIT){
+			}else if (pUSARTxHandle->USARTx_Config.USART_StopBit == TWO_STOP_BIT){
 							pUSARTxHandle->USARTx->CR2   |= (1 << 13);
 							pUSARTxHandle->USARTx->CR2   &= ~(1 << 12);
 
-						}else if (pUSARTxHandle->USARTx_Config.USART_StopBit == HALF_STOP_BIT){
+			}else if (pUSARTxHandle->USARTx_Config.USART_StopBit == HALF_STOP_BIT){
 							pUSARTxHandle->USARTx->CR2   |= (1 << 12);
 							pUSARTxHandle->USARTx->CR2   &= ~(1 << 13);
 
-						}else if (pUSARTxHandle->USARTx_Config.USART_StopBit == OAH_STOP_BIT){
+			}else if (pUSARTxHandle->USARTx_Config.USART_StopBit == OAH_STOP_BIT){
 							pUSARTxHandle->USARTx->CR2   |= (1 << 12);
 							pUSARTxHandle->USARTx->CR2   |= (1 << 13);
 
-						}else{
-							// I really have to implement the error handling
+			}else{
 						}
 	    // Step 4: Configure HW flow control in CR3
 			if (pUSARTxHandle->USARTx_Config.USART_HWFlowControl == USART_HW_FLOW_CTRL_NONE){
@@ -119,8 +118,8 @@ void USART_Init(USART_Handle_t *pUSARTxHandle){
 										pUSARTxHandle->USARTx->CR3   |= (1 << 8);
 
 				}else{
-										// I really have to implement the error handling
-					}
+
+				}
 
 			//5.0 Oversampling
 			if (pUSARTxHandle->USARTx_Config.USART_OverSampling == OVERSAMPLING_8){
@@ -147,7 +146,7 @@ void USART_Init(USART_Handle_t *pUSARTxHandle){
 }
 
 void USART_DeInit(USART_RegDef_t *pUSARTx){
-
+//	USART2_PCLK_DI();
 }
 
 
@@ -192,7 +191,7 @@ void USART_SendNumber(USART_Handle_t *pUSARTxHandle, int num){
 }
 
 uint8_t USART_ReceiveChar(USART_Handle_t *h){
-	// clear overrun error
+		// clear overrun error
 	    if(h->USARTx->ISR & (1 << 3)){
 	        h->USARTx->ICR |= (1 << 3);  // ORECF — clear ORE
 	    }
@@ -232,7 +231,9 @@ void USART_ReceiveLine(USART_Handle_t *h, char *buf, uint32_t maxLen){
         if(c == '\n' || c == '\r' || c == '$') break;
         buf[i++] = c;
     }
-    buf[i] = '\0';
+    buf[i] = '\0';{
+
+    }
 }
 
 void USART_ParseData(char *buf, Servo_command *cmd){
@@ -258,3 +259,48 @@ void USART_ServoCommand(Servo_command *cmd, TIM_RegDef_t *pTIM2, TIM_RegDef_t *p
 	}
 
 }
+void USART2_Interrupt_Config(uint8_t IRQNumber, uint8_t EnorDi){
+	if (EnorDi == ENABLE){
+				// Setting from M4 General USER GUIDE
+				// ISER ===>   Interrupt Set-enable Registers
+				if (IRQNumber <= 31){
+					// ISER0 for 0 to 31
+					*NVIC_ISER0 |= (1 << IRQNumber);
+
+				}else if (IRQNumber > 31 && IRQNumber < 64){
+					// ISER1 for  32 to  63
+					*NVIC_ISER1 |= (1 << ( IRQNumber % 32));
+
+				}else if (IRQNumber >= 64 && IRQNumber < 96){
+					// ISER2 for   64  to  95
+					*NVIC_ISER2 |= (1 << ( IRQNumber % 64));
+				}
+			}
+
+			else {
+				// Clearing from M4 General USER GUIDE
+				// ICER ===>   Interrupt Clear-enable Registers
+				if (IRQNumber <= 31){
+					// ICER0 for 0 to 31
+					*NVIC_ICER0 |= (1 << IRQNumber);
+
+				}else if (IRQNumber > 31 && IRQNumber < 64){
+					// ICER1 for  32 to  63
+					*NVIC_ICER1 |= (1 << IRQNumber % 32);
+
+
+				}else if (IRQNumber >= 64 && IRQNumber < 96){
+					// ICER2 for   64  to  95
+					*NVIC_ICER2 |= (1 << IRQNumber % 64);
+				}
+			}
+}
+
+void USART2_Priority_Config(uint8_t IRQNumber, uint8_t IRQPriority){
+			uint8_t iprx = IRQNumber / 4;
+			uint8_t iprx_Section = IRQNumber % 4;
+			uint8_t Shift_amount = (8 * iprx_Section) + (8 - NO_PR_BITS_IMPLEMENTED);
+			*(NVIC_IPR_BASE_ADDR + iprx) |= (IRQPriority << Shift_amount);
+
+}
+

@@ -15,11 +15,11 @@ int main(void)
     memset(&GpioLed,0,sizeof(GpioLed));
     memset(&GpioButton, 0, sizeof(GpioButton));
 
-    GpioButton.pGPIOx = GPIOB;		// Button
+    GpioButton.pGPIOx = GPIOC;		// Button
     GpioLed.pGPIOx = GPIOA;			// LED
 
     // GPIO LED Definition
-    GpioLed.GPIO_PIN_Config.GPIO_PinNumber = GPIO_PIN_8;
+    GpioLed.GPIO_PIN_Config.GPIO_PinNumber = GPIO_PIN_5;
     GpioLed.GPIO_PIN_Config.GPIO_PinMode = GPIO_MODE_OUT;
     GpioLed.GPIO_PIN_Config.GPIO_PinSpeed = GPIO_SP_HIGH;
     GpioLed.GPIO_PIN_Config.GPIO_OPType = GPIO_OP_TYPE_PP;
@@ -32,13 +32,13 @@ int main(void)
 
 
     // GPIO Button Definition
-    GpioButton.GPIO_PIN_Config.GPIO_PinNumber = GPIO_PIN_12;
+    GpioButton.GPIO_PIN_Config.GPIO_PinNumber = GPIO_PIN_13;
     GpioButton.GPIO_PIN_Config.GPIO_PinMode = GPIO_MODE_IT_FT;	// Falling Edge Interrupt
     GpioButton.GPIO_PIN_Config.GPIO_PinSpeed = GPIO_SP_HIGH;
     GpioButton.GPIO_PIN_Config.GPIO_PinPuPdControl = GPIO_PIN_PU;   // pull up is available on the board itself
 
     // Clock Enable Disable Control
-    GPIO_Periph_ClockControl(GPIOB, ENABLE);
+    GPIO_Periph_ClockControl(GPIOC, ENABLE);
 
     GPIO_Init(&GpioButton);
 
@@ -51,7 +51,7 @@ int main(void)
 }
 
 void EXTI15_10_IRQHandler(void){
-		delay();
-    	GPIO_IRQHandler(GPIO_PIN_12);
-    	GPIO_ToggleOutputPin(GPIOA, GPIO_PIN_8);
+//		delay();
+    	GPIO_IRQHandler(GPIO_PIN_13);
+    	GPIO_ToggleOutputPin(GPIOA, GPIO_PIN_5);
     }

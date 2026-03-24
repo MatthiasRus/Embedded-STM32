@@ -93,4 +93,11 @@ uint8_t USART_ReceiveChar(USART_Handle_t *h);
 void USART_ReceiveLine(USART_Handle_t *h, char *buf, uint32_t maxLen);
 void USART_ParseData(char *buf , Servo_command *cmd);
 void USART_ServoCommand(Servo_command *cmd, TIM_RegDef_t *pTIM2, TIM_RegDef_t *pTIM3);
+
+// Interruption
+void USART2_Interrupt_Config(uint8_t IRQNumber, uint8_t ENorDI);
+
+void USART2_Priority_Config(uint8_t IRQNumber, uint8_t PriorityNumber);
+
+//void USART2_IRQHandler(void);
 #endif /* INC_STM32L476XX_USART_DRIVER_H_ */

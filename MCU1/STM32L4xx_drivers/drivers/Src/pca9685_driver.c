@@ -11,8 +11,9 @@
 void PCA9685_Init(I2C_Handle_t *hi2c){
     uint8_t data[2];
 
-    // sleep
-    data[0] = MODE1_REG; data[1] = 0x10;
+    // set sleep mode bit 4
+    data[0] = MODE1_REG;
+    data[1] = 0x10;
     I2C_MasterSendData(hi2c, data, 2, PCA9685_ADDR);
 
     // set prescale for 50Hz
@@ -33,7 +34,7 @@ void PCA9685_Init(I2C_Handle_t *hi2c){
 
 
 void PCA9685_SetPulse(I2C_Handle_t *hi2c, uint8_t channel, uint16_t pulse_us){
-	uint16_t ticks = pulse_us * 4096 / 20000;
+	uint16_t ticks = pulse_us * 4096 / 20000;  // $50 Hz
 	uint8_t data[5];
 	data[0] = GET_CHANNEL(channel);  // register address
 	data[1] = 0x00;  // ON_L

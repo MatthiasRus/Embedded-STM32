@@ -41,7 +41,7 @@ int main(void){
 					usart.USARTx_Config.USART_Parity = NO_PARITY;
 
 					USART_Init(&usart);
-
+//
 				while(1){
 					char buf[50];
 					Servo_command cmd;

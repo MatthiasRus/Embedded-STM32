@@ -57,7 +57,8 @@
 
 #define RCC_BASE_ADDR							(AHB1_PERIPH_BASE_ADDR + 0x1000)
 
-
+#define DMA1_BASE_ADDR							(AHB1_PERIPH_BASE_ADDR + 0x0000)
+#define DMA2_BASE_ADDR							(AHB1_PERIPH_BASE_ADDR + 0x0400)
 /* APB1 BASED PERIPHERAL ADDRESSES */
 
 #define SPI2_BASE_ADDR							(APB1_PERIPH_BASE_ADDR + 0X3800)
@@ -320,43 +321,19 @@ typedef struct {
 } TIM_RegDef_t;
 
 typedef struct {
+
 		__vo uint32_t ISR;
 		__vo uint32_t IFCR;
-		__vo uint32_t CCR1;
-		__vo uint32_t CNDTR1;
-		__vo uint32_t CPAR1;
-		__vo uint32_t CMAR1;
-			 uint32_t reserved1;
-		__vo uint32_t CCR2;
-		__vo uint32_t CNDTR2;
-		__vo uint32_t CPAR2;
-		__vo uint32_t CMAR2;
-		 	 uint32_t reserved2;
-		__vo uint32_t CCR3;
-		__vo uint32_t CNDTR3;
-		__vo uint32_t CPAR3;
-		__vo uint32_t CMAR3;
-	 	 	 uint32_t reserved3;
-		__vo uint32_t CCR4;
-		__vo uint32_t CNDTR4;
-		__vo uint32_t CPAR4;
-		__vo uint32_t CMAR4;
-	 	 	 uint32_t reserved4;
-		__vo uint32_t CCR5;
-		__vo uint32_t CNDTR5;
-		__vo uint32_t CPAR5;
-		__vo uint32_t CMAR5;
-			 uint32_t reserved5;
-		__vo uint32_t CCR6;
-		__vo uint32_t CNDTR6;
-		__vo uint32_t CPAR6;
-		__vo uint32_t CMAR6;
-			 uint32_t reserved6;
-		__vo uint32_t CCR7;
-		__vo uint32_t CNDTR7;
-		__vo uint32_t CPAR7;
-		__vo uint32_t CMAR7;
-			 uint32_t reserved7;
+
+		struct{
+			__vo uint32_t CCR;
+			__vo uint32_t CNDTR;
+			__vo uint32_t CPAR;
+			__vo uint32_t CMAR;
+				 uint32_t Reserved;
+				}CH[7];
+
+			 uint32_t Reserved_Gap[5];
 		__vo uint32_t CSELR;
 
 }DMA_RegDef_t;
@@ -391,7 +368,10 @@ typedef struct {
 
 #define SYSCFG									((SYSCFG_RegDef_t*)SYSCFG_BASE_ADDR)
 
-// ===========================ADC Pointer Initializaiton=========================================
+#define DMA1									((DMA_RegDef_t*)DMA1_BASE_ADDR)
+#define DMA2									((DMA_RegDef_t*)DMA2_BASE_ADDR)
+
+// ===========================ADC Pointer Initialization=========================================
 #define ADC1              						((ADC_RegDef_t*)ADC1_BASE_ADDR)
 #define ADC1_COMMON       						((ADC_ComRegDef_t*)ADC_COMM_ADDR)
 
@@ -403,6 +383,9 @@ typedef struct {
 
 #define USART2              					((USART_RegDef_t*)USART2_BASE_ADDR)
 #define USART3 									((USART_RegDef_t*)USART3_BASE_ADDR)
+
+#define USART2_RX_REQUEST_NUMBER				2
+#define USART2_TX_REQUEST_NUMBER				2
 
 // ==================================TIM Pointer Initialization======================================
 #define TIM2_PCLK_EN()							(RCC->APB1ENR1 |= (1 << 0))
@@ -446,9 +429,16 @@ typedef struct {
 /*--------------------------clock Enable MACROS for SYSCFG---------------------------------------*/
 
 #define SYSCFG_PCLK_EN()					(RCC->APB2ENR |= (1 << 0))
+/*======================================DMA part============================= */
 
+#define DMA1_PCLK_EN()						(RCC->AHB1ENR  |= (1 << 0))
+#define DMA2_PCLK_EN()						(RCC->AHB1ENR  |= (1 << 1))
 
+#define DMA1_PCLK_RST()						(RCC->AHB1RSTR |= (1 << 0))
+#define DMA2_PCLK_RST()						(RCC->AHB1RSTR |= (1 << 1))
 
+#define DMA1_PCLK_DI()						(RCC->AHB1ENR  &= ~(1 << 0))
+#define DMA2_PCLK_DI()						(RCC->AHB1ENR  &= ~(1 << 1))
 
 /*	-------------------------clock disable MACROS for GPIOx------------------------------------*/
 
@@ -517,14 +507,20 @@ typedef struct {
 // @GPIO PIN SYSCFG_EXTIx pin configuration
 
 
-#define PORTCODE_BASEADDR(x)	 (  (x == GPIOA) ? 0 :\
-									(x == GPIOB) ? 1 :\
-									(x == GPIOC) ? 2 :\
-									(x == GPIOD) ? 3 :\
-									(x == GPIOE) ? 4 :\
-									(x == GPIOF) ? 5 :\
-									(x == GPIOG) ? 6 : 0)
+#define PORTCODE_BASEADDR(x)	 (  		(x == GPIOA) ? 0 :\
+											(x == GPIOB) ? 1 :\
+											(x == GPIOC) ? 2 :\
+											(x == GPIOD) ? 3 :\
+											(x == GPIOE) ? 4 :\
+											(x == GPIOF) ? 5 :\
+											(x == GPIOG) ? 6 : 0)
 
+/*==================================DMA===============================================================================*/
+#define USART2_RX_DMA_NO				1
+#define USART2_TX_DMA_NO				1
+
+#define USART2_TX_DMA_CHANNEL_NO		7
+#define USART2_RX_DMA_CHANNEL_NO		6
 
 /* --------------------------------Interrupt Request Number Positions for EXTIx on VECTRO Table-----------------------*/
 #define IRQ_NO_EXTI0				6
@@ -693,6 +689,7 @@ typedef struct {
 #include "stm32l476xx_i2c_driver.h"
 #include "stm32l476xx_adc_driver.h"
 #include "stm32l476xx_usart_driver.h"
-#include <stm32l476xx_TIMx_driver.h>
+#include "stm32l476xx_TIMx_driver.h"
+#include <stm32l476xx_DMA_driver.h>
 #include "systick.h"
 #endif /* INC_STM32L476XX_H_ */

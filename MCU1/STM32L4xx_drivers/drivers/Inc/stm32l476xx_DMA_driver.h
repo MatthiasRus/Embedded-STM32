@@ -57,6 +57,11 @@
 											(x == 5) ? DMA_REQUEST_CHANNEL5_BIT :\
 											(x == 6) ? DMA_REQUEST_CHANNEL6_BIT :\
 											(x == 7) ? DMA_REQUEST_CHANNEL7_BIT : 0)
+
+#define DMA_TCIE_BIT                           1
+#define DMA_HTIE_BIT						   2
+#define DMA_TCIF6_BIT						   21
+
 typedef struct{
 	uint32_t MemoryAddress;    // buffer loc
 	uint32_t PeripheralAddress; // ex. usart
@@ -80,4 +85,7 @@ void DMAx_Peripheral_Clock_Control(DMA_RegDef_t* DMAx, uint8_t EnOrDi);
 void DMAx_Init(DMAx_Handle_t* DMAx_Handle);
 void DMAx_Start(DMAx_Handle_t* DMAx_Handle);
 void DMAx_Stop(DMAx_Handle_t* DMAx_Handle);
+
+void DMAx_Intrrupt_Config(uint8_t IRQNumber, uint8_t EnorDi);
+void DMAx_Priority_Config(uint8_t IRQNumber, uint8_t IRQPriority);
 #endif /* INC_STM32L476XX_DMA_DRIVER_H_ */

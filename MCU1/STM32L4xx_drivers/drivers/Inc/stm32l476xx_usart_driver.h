@@ -55,7 +55,8 @@ M[1:0] = 10: 1 Start bit, 7 data bits, n stop bits
 #define USART_HW_FLOW_CTRL_RTS     2
 #define USART_HW_FLOW_CTRL_CTS_RTS 3
 
-
+#define USART_IDLE_BIT				4
+#define USART_IDLE_CLEAR_BIT		4
 typedef struct{
 	uint32_t  USART_BaudRate;
 	uint32_t  USART_WordLength;
@@ -99,5 +100,7 @@ void USART2_Interrupt_Config(uint8_t IRQNumber, uint8_t ENorDI);
 
 void USART2_Priority_Config(uint8_t IRQNumber, uint8_t PriorityNumber);
 
-//void USART2_IRQHandler(void);
+// DMA
+void USART2_DMA_RX_Enable(USART_Handle_t *pUSARTHandle, uint32_t buffer, uint16_t size);
+
 #endif /* INC_STM32L476XX_USART_DRIVER_H_ */

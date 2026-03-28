@@ -690,6 +690,6 @@ typedef struct {
 #include "stm32l476xx_adc_driver.h"
 #include "stm32l476xx_usart_driver.h"
 #include "stm32l476xx_TIMx_driver.h"
-#include <stm32l476xx_DMA_driver.h>
+#include "stm32l476xx_DMA_driver.h"
 #include "systick.h"
 #endif /* INC_STM32L476XX_H_ */

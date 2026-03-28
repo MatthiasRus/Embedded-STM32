@@ -8,7 +8,7 @@
 #ifndef INC_STM32L476XX_USART_DRIVER_H_
 #define INC_STM32L476XX_USART_DRIVER_H_
 #include "stm32l476xx.h"
-
+#include "stm32l476xx_DMA_driver.h"
 #define NO_PARITY    0
 #define EVEN_PARITY  1
 #define ODD_PARITY   2
@@ -101,6 +101,6 @@ void USART2_Interrupt_Config(uint8_t IRQNumber, uint8_t ENorDI);
 void USART2_Priority_Config(uint8_t IRQNumber, uint8_t PriorityNumber);
 
 // DMA
-void USART2_DMA_RX_Enable(USART_Handle_t *pUSARTHandle, uint32_t buffer, uint16_t size);
+void USART2_DMA_RX_Enable(USART_Handle_t *pUSARTHandle,DMAx_Handle_t *pDMAHandle, void *buffer, uint8_t size);
 
 #endif /* INC_STM32L476XX_USART_DRIVER_H_ */

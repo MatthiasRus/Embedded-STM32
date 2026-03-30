@@ -9,6 +9,7 @@
 #define INC_STM32L476XX_DMA_DRIVER_H_
 
 #include "stm32l476xx.h"
+#include "stm32l476xx_usart_driver.h"
 
 #define SINGLE_MODE_DMA					0
 #define CIRCULAR_MODE					1
@@ -42,25 +43,17 @@
 
 #define MEMORY_TO_MEMORY_MODE_BIT				14
 
-#define DMA_REQUEST_CHANNEL1_BIT				0
-#define DMA_REQUEST_CHANNEL2_BIT				4
-#define DMA_REQUEST_CHANNEL3_BIT				8
-#define DMA_REQUEST_CHANNEL4_BIT				12
-#define DMA_REQUEST_CHANNEL5_BIT				16
-#define DMA_REQUEST_CHANNEL6_BIT				20
-#define DMA_REQUEST_CHANNEL7_BIT				24
-
-#define REQUEST_CHANNEL_BIT(x)		 (  	(x == 1) ? DMA_REQUEST_CHANNEL1_BIT :\
-											(x == 2) ? DMA_REQUEST_CHANNEL2_BIT :\
-											(x == 3) ? DMA_REQUEST_CHANNEL3_BIT :\
-											(x == 4) ? DMA_REQUEST_CHANNEL4_BIT :\
-											(x == 5) ? DMA_REQUEST_CHANNEL5_BIT :\
-											(x == 6) ? DMA_REQUEST_CHANNEL6_BIT :\
-											(x == 7) ? DMA_REQUEST_CHANNEL7_BIT : 0)
+#define REQUEST_CHANNEL_BIT(x)		 ( (x - 1) * 4)
 
 #define DMA_TCIE_BIT                           1
 #define DMA_HTIE_BIT						   2
 #define DMA_TCIF6_BIT						   21
+
+#define DMA_IFCR_CGIF_BIT(ch)    (((ch) - 1) * 4)
+#define DMA_IFCR_CTCIF_BIT(ch)   (((ch) - 1) * 4 + 1)
+#define DMA_IFCR_CHTIF_BIT(ch)   (((ch) - 1) * 4 + 2)
+#define DMA_IFCR_CTEIF_BIT(ch)   (((ch) - 1) * 4 + 3)
+
 
 typedef struct{
 	uint32_t MemoryAddress;    // buffer loc
@@ -83,9 +76,12 @@ typedef struct{
 void DMAx_Peripheral_Clock_Control(DMA_RegDef_t* DMAx, uint8_t EnOrDi);
 
 void DMAx_Init(DMAx_Handle_t* DMAx_Handle);
-void DMAx_Start(DMAx_Handle_t* DMAx_Handle);
+void DMAx_Start(DMAx_Handle_t* DMAx_Handle, uint16_t size);
 void DMAx_Stop(DMAx_Handle_t* DMAx_Handle);
 
 void DMAx_Intrrupt_Config(uint8_t IRQNumber, uint8_t EnorDi);
 void DMAx_Priority_Config(uint8_t IRQNumber, uint8_t IRQPriority);
+void DMAx_EnabelInterrupt(DMAx_Handle_t* DMAx_Handle,uint8_t HTIE_DMA,uint8_t TCIE_DMA);
+void DMAx_ClearFlags(DMAx_Handle_t* DMAx_Handle, uint8_t flag);
+void DMA_SendString(USART_Handle_t* USARTHandle, DMAx_Handle_t* DMAHandle, char *buffer, volatile uint8_t *tx_done);
 #endif /* INC_STM32L476XX_DMA_DRIVER_H_ */

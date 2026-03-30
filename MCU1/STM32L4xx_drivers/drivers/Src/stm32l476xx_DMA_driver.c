@@ -7,7 +7,7 @@
 
 #include "stm32l476xx.h"
 #include "stm32l476xx_DMA_driver.h"
-
+#include <string.h>
 
 void DMAx_Peripheral_Clock_Control(DMA_RegDef_t* DMAx, uint8_t EnOrDi){
 	if (EnOrDi == ENABLE){
@@ -28,6 +28,7 @@ void DMAx_Peripheral_Clock_Control(DMA_RegDef_t* DMAx, uint8_t EnOrDi){
 
 
 void DMAx_Init(DMAx_Handle_t* DMAx_Handle){
+
 	DMAx_Peripheral_Clock_Control(DMAx_Handle->DMAx, ENABLE);
 	uint8_t channel = DMAx_Handle->DMAx_config.Channel;
 
@@ -48,13 +49,13 @@ void DMAx_Init(DMAx_Handle_t* DMAx_Handle){
 	DMAx_Handle->DMAx->CH[channel - 1].CNDTR  =   DMAx_Handle->DMAx_config.TransferSize;
 	DMAx_Handle->DMAx->CH[channel - 1].CCR   |=  (ENABLE   <<  DMA_MINC_BIT);
 
-	DMAx_Handle->DMAx->CH[channel - 1].CCR |= 	 (1 << DMA_TCIE_BIT);  // TCIE
-	DMAx_Handle->DMAx->CH[channel - 1].CCR |= 	 (1 << DMA_HTIE_BIT);  // HTIE
 }
 
-void DMAx_Start(DMAx_Handle_t* DMAx_Handle){
-	uint8_t channel = DMAx_Handle->DMAx_config.Channel;
-	DMAx_Handle->DMAx->CH[channel-1].CCR |= (1 << 0);
+void DMAx_Start(DMAx_Handle_t* DMAx_Handle, uint16_t size){
+		DMAx_Stop(DMAx_Handle);
+		uint8_t channel = DMAx_Handle->DMAx_config.Channel;
+		DMAx_Handle->DMAx->CH[channel - 1].CNDTR = size;
+		DMAx_Handle->DMAx->CH[channel - 1].CCR |= (1 << 0);
 }
 
 void DMAx_Stop(DMAx_Handle_t* DMAx_Handle){
@@ -104,5 +105,35 @@ void DMAx_Priority_Config(uint8_t IRQNumber, uint8_t IRQPriority){
 				uint8_t iprx_Section = IRQNumber % 4;
 				uint8_t Shift_amount = (8 * iprx_Section) + (8 - NO_PR_BITS_IMPLEMENTED);
 				*(NVIC_IPR_BASE_ADDR + iprx) |= (IRQPriority << Shift_amount);
+
+}
+
+void DMAx_EnableInterrupt(DMAx_Handle_t* DMAx_Handle, uint8_t TCIE_DMA, uint8_t HTIE_DMA){
+    uint8_t channel = DMAx_Handle->DMAx_config.Channel;
+
+    if (HTIE_DMA) DMAx_Handle->DMAx->CH[channel - 1].CCR |=  (1 << DMA_HTIE_BIT);
+    else          DMAx_Handle->DMAx->CH[channel - 1].CCR &= ~(1 << DMA_HTIE_BIT);
+
+    if (TCIE_DMA) DMAx_Handle->DMAx->CH[channel - 1].CCR |=  (1 << DMA_TCIE_BIT);
+    else          DMAx_Handle->DMAx->CH[channel - 1].CCR &= ~(1 << DMA_TCIE_BIT);
+}
+
+void DMAx_ClearFlags(DMAx_Handle_t* DMAx_Handle, uint8_t flag){
+		DMAx_Handle->DMAx->IFCR |= (1 << flag);
+
+}
+
+void DMA_SendString(USART_Handle_t *pUSART, DMAx_Handle_t *pDMA, char *str, volatile uint8_t *tx_done){
+	while (!(*tx_done));
+	*tx_done = 0;
+
+    static char tx_buf[50];
+    uint16_t len = strlen(str);
+    memcpy(tx_buf, str, len + 1);  // +1 for null terminator
+    // update CMAR to point at tx_buf
+    uint8_t ch = pDMA->DMAx_config.Channel;
+    pDMA->DMAx->CH[ch - 1].CMAR = (uint32_t)tx_buf;
+    pUSART->USARTx->CR3 |= (1 << USART_DMAT_BIT);
+    DMAx_Start(pDMA, len);
 
 }

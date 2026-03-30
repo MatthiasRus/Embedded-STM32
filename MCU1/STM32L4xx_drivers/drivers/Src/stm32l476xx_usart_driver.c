@@ -304,7 +304,7 @@ void USART2_Priority_Config(uint8_t IRQNumber, uint8_t IRQPriority){
 
 }
 
-void USART2_DMA_RX_Enable(USART_Handle_t *pUSARTHandle, DMAx_Handle_t *pDMA_USART,void *buffer, uint8_t size){
+void USART2_DMA_RX_Enable(USART_Handle_t *pUSARTHandle, DMAx_Handle_t *pDMA_USART,void *buffer, uint16_t size){
 
 	pDMA_USART->DMAx = DMA1;
 	pDMA_USART->DMAx_config.Channel = USART2_RX_DMA_CHANNEL_NO; // USART2_RX is channel 6
@@ -319,9 +319,26 @@ void USART2_DMA_RX_Enable(USART_Handle_t *pUSARTHandle, DMAx_Handle_t *pDMA_USAR
 
 
 	DMAx_Init(pDMA_USART);
-	// Hard-coding the PINC value no peripheral increment is expected while working on one peripheral
-	pDMA_USART->DMAx->CH[USART2_RX_DMA_CHANNEL_NO - 1].CCR   &=  ~(ENABLE   <<  DMA_PINC_BIT);
-	pUSARTHandle->USARTx->CR3   |= (1 << 6); // SET DMAR i.e dma Enable receiver
 
-	DMAx_Start(pDMA_USART);
+	pUSARTHandle->USARTx->CR3   |= (1 << USART_DMAR_BIT);
+
+	DMAx_Start(pDMA_USART, size);
 }
+
+void USART2_DMA_TX_Enable(USART_Handle_t *pUSARTHandle,DMAx_Handle_t *pDMAHandle, void *buffer, uint16_t size){
+pDMAHandle->DMAx = DMA1;
+pDMAHandle->DMAx_config.Channel = USART2_TX_DMA_CHANNEL_NO;
+pDMAHandle->DMAx_config.Direction = DATA_TRANSFER_DIRECTION_MEMORY;
+pDMAHandle->DMAx_config.Mode = SINGLE_MODE_DMA;
+pDMAHandle->DMAx_config.TransferSize = size;
+pDMAHandle->DMAx_config.MemoryAddress = (uint32_t)buffer;
+pDMAHandle->DMAx_config.PeripheralAddress = (uint32_t)&pUSARTHandle->USARTx->TDR; // make sure txe is 1 lad
+pDMAHandle->DMAx_config.RequestNumber = USART2_TX_REQUEST_NUMBER;
+
+DMAx_Init(pDMAHandle);
+
+pUSARTHandle->USARTx->CR3  |= (1 << USART_DMAT_BIT);
+
+DMAx_Start(pDMAHandle, size);
+}
+

@@ -83,8 +83,7 @@ void USART2_IRQHandler(void){
             cmd_ready = 1;
         }
 
-        dma1.DMAx->CH[channel - 1].CNDTR = bufferSize;
-        DMAx_Start(&dma1);
+        DMAx_Start(&dma1,bufferSize);
     }
 }
 

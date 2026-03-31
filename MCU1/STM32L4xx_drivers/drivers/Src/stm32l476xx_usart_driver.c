@@ -6,7 +6,7 @@
  */
 
 #include "stm32l476xx.h"
-
+#include "stm32l476xx_usart_driver.h"
 #define  BAUD_RATE_VAL(n,fclk, baudRate)          ((fclk * n) / (baudRate))
 
 void USART_Init(USART_Handle_t *pUSARTxHandle){

@@ -541,6 +541,9 @@ typedef struct {
 #define IRQ_NO_USART2				38
 #define IRQ_NO_USART3				39
 
+/*==================================Intrrupt Request Number for DMA============================================*/
+#define IRQ_NO_DMA1_CH6				16
+#define IRQ_NO_DMA1_CH7				17
 /*==================================NVIC Interrupt Request Priority Numbers==============================================*/
 
 #define NVIC_IRQ_PRI0				0
@@ -687,9 +690,9 @@ typedef struct {
 #include "stm32l476xx_gpio_driver.h"
 #include "stm32l476xx_spi_driver.h"
 #include "stm32l476xx_i2c_driver.h"
+//#include "stm32l476xx_usart_driver.h"
+//#include "stm32l476xx_DMA_driver.h"
 #include "stm32l476xx_adc_driver.h"
-#include "stm32l476xx_usart_driver.h"
 #include "stm32l476xx_TIMx_driver.h"
-#include "stm32l476xx_DMA_driver.h"
 #include "systick.h"
 #endif /* INC_STM32L476XX_H_ */

@@ -7,9 +7,7 @@
 
 #ifndef INC_STM32L476XX_DMA_DRIVER_H_
 #define INC_STM32L476XX_DMA_DRIVER_H_
-
 #include "stm32l476xx.h"
-#include "stm32l476xx_usart_driver.h"
 
 #define SINGLE_MODE_DMA					0
 #define CIRCULAR_MODE					1
@@ -81,7 +79,10 @@ void DMAx_Stop(DMAx_Handle_t* DMAx_Handle);
 
 void DMAx_Intrrupt_Config(uint8_t IRQNumber, uint8_t EnorDi);
 void DMAx_Priority_Config(uint8_t IRQNumber, uint8_t IRQPriority);
-void DMAx_EnabelInterrupt(DMAx_Handle_t* DMAx_Handle,uint8_t HTIE_DMA,uint8_t TCIE_DMA);
-void DMAx_ClearFlags(DMAx_Handle_t* DMAx_Handle, uint8_t flag);
+void DMAx_EnableInterrupt(DMAx_Handle_t* DMAx_Handle,uint8_t HTIE_DMA,uint8_t TCIE_DMA);
+void DMAx_ClearFlag(DMAx_Handle_t* DMAx_Handle, uint8_t flag);
+#include "stm32l476xx_usart_driver.h"
+
 void DMA_SendString(USART_Handle_t* USARTHandle, DMAx_Handle_t* DMAHandle, char *buffer, volatile uint8_t *tx_done);
+
 #endif /* INC_STM32L476XX_DMA_DRIVER_H_ */

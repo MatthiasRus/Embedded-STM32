@@ -34,9 +34,9 @@ typedef struct{
 	uint8_t RxState;
 }SPI_Handle_t;
 
-static void spi_txe_interrupt_handle(SPI_Handle_t *pHandle);
-static void spi_rxne_interrupt_handle(SPI_Handle_t *pHandle);
-static void spi_ovr_err_interrupt_handle(SPI_Handle_t *pHandle);
+//static void spi_txe_interrupt_handle(SPI_Handle_t *pHandle);
+//static void spi_rxne_interrupt_handle(SPI_Handle_t *pHandle);
+//static void spi_ovr_err_interrupt_handle(SPI_Handle_t *pHandle);
 
 /* @SPI_DeviceMode*/
 

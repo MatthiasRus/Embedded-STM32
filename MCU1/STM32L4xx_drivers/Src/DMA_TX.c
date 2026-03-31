@@ -7,6 +7,7 @@
 
 
 #include "stm32l476xx.h"
+#include "stm32l476xx_usart_driver.h"
 #include <string.h>
 
 USART_Handle_t usart2;
@@ -45,7 +46,7 @@ int main(void){
 		while(1){
 
 
-					   DMA_SendString(&usart2,&dma1, "Pulse:2323\n", &tx_complete);
+				DMA_SendString(&usart2,&dma1, "Pulse:2323\n", &tx_complete);
 
 
 			 }

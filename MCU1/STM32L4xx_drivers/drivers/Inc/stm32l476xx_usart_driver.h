@@ -8,6 +8,7 @@
 #ifndef INC_STM32L476XX_USART_DRIVER_H_
 #define INC_STM32L476XX_USART_DRIVER_H_
 #include "stm32l476xx.h"
+#include <string.h>
 // forward declaration for dma handle
 //typedef struct DMAx_Handle_t DMAx_Handle_t;
 #define NO_PARITY    0
@@ -56,6 +57,9 @@ M[1:0] = 10: 1 Start bit, 7 data bits, n stop bits
 #define USART_HW_FLOW_CTRL_RTS     2
 #define USART_HW_FLOW_CTRL_CTS_RTS 3
 
+#define USART_TXEIE_BIT				7
+#define USART_TXE_BIT				7
+
 #define USART_IDLE_BIT				4
 #define USART_IDLE_CLEAR_BIT		4
 
@@ -84,6 +88,14 @@ typedef struct{
 	uint16_t pulse_us;
 }Servo_command;
 
+
+typedef struct{
+		 char* buf;
+		 uint16_t len;
+		 uint16_t pos;
+	__vo uint8_t isActive;
+}USART_IRQ_TX_State_t;
+
 void USART_Init(USART_Handle_t *pUSARTxHandle);
 void USART_DeInit(USART_RegDef_t *pUSARTx);
 
@@ -107,6 +119,6 @@ void USART2_Priority_Config(uint8_t IRQNumber, uint8_t PriorityNumber);
 // DMA
 void USART2_DMA_RX_Enable(USART_Handle_t *pUSARTHandle,DMAx_Handle_t *pDMAHandle, void *buffer, uint16_t size);
 void USART2_DMA_TX_Enable(USART_Handle_t *pUSARTHandle,DMAx_Handle_t *pDMAHandle, void *buffer, uint16_t size);
-
+void USART2_IRQ_TX_Start(USART_Handle_t  *pUSARTHandle, USART_IRQ_TX_State_t *tx_state);
 
 #endif /* INC_STM32L476XX_USART_DRIVER_H_ */

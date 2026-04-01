@@ -10,11 +10,11 @@
 #include "stm32l476xx_usart_driver.h"
 #include <string.h>
 
-USART_Handle_t usart2;
+static USART_Handle_t usart2;
 DMAx_Handle_t dma1;
-volatile int8_t tx_complete = 0;
+volatile uint8_t tx_complete = 0;
 static char msg[50];
-static int8_t channel = USART2_TX_DMA_CHANNEL_NO;
+static uint8_t channel = USART2_TX_DMA_CHANNEL_NO;
 
 int main(void){
 

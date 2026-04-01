@@ -10,9 +10,7 @@
 #define  BAUD_RATE_VAL(n,fclk, baudRate)          ((fclk * n) / (baudRate))
 
 void USART_Init(USART_Handle_t *pUSARTxHandle){
-		// Step 1: Enable USART2 peripheral clock
-			USART2_PCLK_EN();
-			USART3_PCLK_EN();
+
 
 		// step 1.1 GPIO pa2 init af7
 			GPIO_Handle_t GPIO_USART_Tx;
@@ -36,6 +34,9 @@ void USART_Init(USART_Handle_t *pUSARTxHandle){
 			GPIO_Init(&GPIO_USART_Tx);
 			GPIO_Init(&GPIO_USART_Rx);
 
+			// Step 1: Enable USART2 peripheral clock
+						USART2_PCLK_EN();
+						USART3_PCLK_EN();
 			// Enable OVRDIS — disable overrun, never block on ORE
 			pUSARTxHandle->USARTx->CR3 |= (1 << 12);
 	    // Step 2: Configure word length, parity, mode in CR1
@@ -340,5 +341,17 @@ DMAx_Init(pDMAHandle);
 pUSARTHandle->USARTx->CR3  |= (1 << USART_DMAT_BIT);
 
 DMAx_Start(pDMAHandle, size);
+}
+
+
+void USART2_IRQ_TX_Start(USART_Handle_t *pUSART, USART_IRQ_TX_State_t *tx_state){
+	while(tx_state->isActive);
+
+	tx_state->len = strlen(tx_state->buf);
+	tx_state->pos = 0;
+	tx_state->isActive = 1;
+
+//	pUSART->USARTx->TDR = tx_state->buf[0];
+	pUSART->USARTx->CR1 |= (1 << USART_TXEIE_BIT);
 }
 

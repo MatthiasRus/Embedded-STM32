@@ -1,7 +1,6 @@
 .cproject
 .metadata
 .project
-.settings/
 .vscode/
 Debug/
 *.o

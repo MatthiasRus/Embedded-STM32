@@ -4,7 +4,7 @@
  *  Created on: Mar 11, 2026
  *      Author: mat-ros
  */
-
+#include <stdlib.h>
 #include "stm32l476xx.h"
 #include "stm32l476xx_usart_driver.h"
 #define  BAUD_RATE_VAL(n,fclk, baudRate)          ((fclk * n) / (baudRate))

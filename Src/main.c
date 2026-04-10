@@ -5,8 +5,7 @@
 #include "stm32l476xx.h"
 #include "stm32l476xx_usart_driver.h"
 
-#define LOW 			0
-#define BTN_PRESSED 	LOW
+
 
 static GPIO_Handle_t GpioLed;
 static USART_Handle_t Usart2;
@@ -84,6 +83,7 @@ int main(void)
 {
 
 	SystemClock_Config();
+	memset(&Usart2, 0, sizeof(Usart2));
 
     GpioLed.pGPIOx = GPIOA;			// LED
 

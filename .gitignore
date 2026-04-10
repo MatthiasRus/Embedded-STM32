@@ -1,0 +1,13 @@
+.cproject
+.metadata
+.project
+.settings/
+.vscode/
+Debug/
+*.o
+*.d
+*.elf
+*.map
+*.list
+*.su
+.settings/

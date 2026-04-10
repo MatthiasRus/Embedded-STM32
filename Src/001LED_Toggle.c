@@ -1,0 +1,25 @@
+#include "stm32l476xx.h"
+
+void delay(void){
+	for (int i = 0; i < 500000; i++);
+}
+int main(void)
+{
+    GPIO_Handle_t GpioLed;
+    GpioLed.pGPIOx = GPIOA;
+    GpioLed.GPIO_PIN_Config.GPIO_PinNumber = GPIO_PIN_5;
+    GpioLed.GPIO_PIN_Config.GPIO_PinMode = GPIO_MODE_OUT;
+    GpioLed.GPIO_PIN_Config.GPIO_PinSpeed = GPIO_SP_HIGH;
+    GpioLed.GPIO_PIN_Config.GPIO_OPType = GPIO_OP_TYPE_PP;
+    GpioLed.GPIO_PIN_Config.GPIO_PinPuPdControl = GPIO_NO_PUPD;
+
+    GPIO_Periph_ClockControl(GPIOA, ENABLE);
+
+    GPIO_Init(&GpioLed);
+
+    while(1){
+    	GPIO_ToggleOutputPin(GPIOA, GPIO_PIN_5);
+    	delay();
+    }
+	return 0;
+}

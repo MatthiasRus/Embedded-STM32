@@ -103,17 +103,24 @@ void I2C_MasterSendData(I2C_Handle_t *pI2CHandle, uint8_t *pTxBuffer, uint32_t L
 
 
 		for (uint32_t i = 0; i< Len; i++){
+
 			//Wait until TXIS is set by the hardware
-			while(!(pI2CHandle->I2Cx->ISR  & (1 << 1)));
+			uint32_t timeout = 100000;
+			while(!(pI2CHandle->I2Cx->ISR & (1 << 1))) {
+			    if (--timeout == 0) return;  // bus hung — bail out
+			}
 			// Write to TXDR
 			pI2CHandle->I2Cx->TXDR  = (pTxBuffer[i]);
 		}
 
 		// Wait while the transfer complete
-		while(!(pI2CHandle->I2Cx->ISR & (1 << 6)));
-
-		//set stop
-		pI2CHandle->I2Cx->CR2  |= (1 << 14);
+		uint32_t timeout = 100000;
+		while(!(pI2CHandle->I2Cx->ISR & (1 << 6))) {
+		    if (--timeout == 0) {
+		        pI2CHandle->I2Cx->CR2 |= (1 << 14);  // generate STOP before bailing
+		        return;
+		    }
+		}
 
 }
 

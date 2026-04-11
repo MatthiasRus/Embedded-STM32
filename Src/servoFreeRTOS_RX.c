@@ -13,26 +13,37 @@
 
 #include "stm32l476xx.h"
 #include "stm32l476xx_usart_driver.h"
+#include "pca9685_driver.h"
 
 static QueueHandle_t  servo_queue = NULL;
 static SemaphoreHandle_t dma_semp = NULL;
-static IWDG_RegDef_t *IWDG;
+
+static IWDG_RegDef_t *IWDG_ = IWDG;
 static GPIO_Handle_t GpioLed;
 static USART_Handle_t Usart2;
 static Servo_command servo_cmd = {0};
 static DMAx_Handle_t DMA_RX;
+static I2C_Handle_t  I2C_Master;
+
 static char buffer[50];
 volatile uint16_t bufferSize = 50;
 volatile int data_received = 0;
 volatile uint8_t  channel = USART2_RX_DMA_CHANNEL_NO;
 
+/*=======================================ServoTaskParameters======================================*/
+typedef struct {
+    USART_Handle_t* usart;
+    I2C_Handle_t*   i2c;
+} ServoTaskParams_t;
+
+static ServoTaskParams_t servo_params;
 void IWDG_Init(void) {
 
-    IWDG->KR  = 0x5555;   // unlock
-    IWDG->PR  = 0x03;     // prescaler /32 → ~1kHz from LSI 32kHz
-    IWDG->RLR = 999;      // reload = 999 → timeout ~1000ms
-    IWDG->KR  = 0xCCCC;   // start
-    IWDG->KR  = 0xAAAA;   // first kick
+    IWDG_->KR  = 0x5555;   // unlock
+    IWDG_->PR  = 0x03;     // prescaler /32 → ~1kHz from LSI 32kHz
+    IWDG_->RLR = 999;      // reload = 999 → timeout ~1000ms
+    IWDG_->KR  = 0xCCCC;   // start
+    IWDG_->KR  = 0xAAAA;   // first kick
 }
 
 void SystemClock_Config(void){
@@ -63,15 +74,16 @@ void servo_parse_task(void* pvParameter){
 }
 
 void servo_update_task(void* pvParameter){
-	USART_Handle_t* usart = (USART_Handle_t*) pvParameter;
+	ServoTaskParams_t* params = (ServoTaskParams_t*) pvParameter;
 	Servo_command local_cmd = {0};
-	BaseType_t queueReceiver;
 	char local_buffer[50];
 
 	while(1){
-		queueReceiver = xQueueReceive(servo_queue, &local_cmd, portMAX_DELAY);
+		xQueueReceive(servo_queue, &local_cmd, portMAX_DELAY);
 		snprintf(local_buffer, sizeof(local_buffer), "ch:%u pulse:%u\r\n", local_cmd.channel, local_cmd.pulse_us);
-		USART_SendString(usart, local_buffer);
+		USART_SendString(params->usart, local_buffer);
+
+		PCA9685_SetPulse(params->i2c, local_cmd.channel, local_cmd.pulse_us);
 	}
 
 }
@@ -97,7 +109,7 @@ void watchdog_task(void* pvParameter){
 	USART_Handle_t* usart = (USART_Handle_t*) pvParameter;
 
 	while(1){
-		IWDG->KR  = 0xAAAA;
+		IWDG_->KR  = 0xAAAA;
 		vTaskDelay(pdMS_TO_TICKS(500));
 		USART_SendString(usart, "WatchDog--HERE\r\n");
 	}
@@ -128,6 +140,23 @@ int main(void){
     Usart2.USARTx_Config.USART_StopBit = ONE_STOP_BIT;
     Usart2.USARTx_Config.USART_WordLength = EIGHT_BIT_WL;
 
+    I2C_Master.I2Cx = I2C3;
+    I2C_Master.I2C_Config.I2C_SCLSpeed = SCLSpeed_FM4K;
+
+    // Bus recovery — release SCL before I2C init
+    GPIOC_PCLK_EN();
+    GPIOC->MODER &= ~(3 << 0);
+    GPIOC->MODER |= (1 << 0);   // PC0 output
+    GPIOC->ODR |= (1 << 0);     // drive HIGH
+    for(volatile int i = 0; i < 10000; i++);
+
+    // Reset I2C3
+    I2C3_REG_RESET();
+    for(volatile int i = 0; i < 1000; i++);
+
+    // Normal init
+    I2C_Init(&I2C_Master);
+    PCA9685_Init(&I2C_Master);
 
     GPIO_Init(&GpioLed);
 
@@ -150,9 +179,11 @@ int main(void){
     dma_semp = xSemaphoreCreateBinary();
     servo_queue = xQueueCreate(queue_depth, sizeof(servo_cmd));
 
+    servo_params.i2c = &I2C_Master;
+    servo_params.usart = &Usart2;
 
     xTaskCreate(servo_parse_task, "Servo_cmd_parse", 256, (void*)&Usart2, 3, NULL);
-    xTaskCreate(servo_update_task, "Servo_Update", 256, (void*)&Usart2, 2, NULL);
+    xTaskCreate(servo_update_task, "Servo_Update", 256, (void*)&servo_params, 2, NULL);
     xTaskCreate(LED_confirm_task, "Led_confirmation", 128, NULL, 1, NULL);
     xTaskCreate(watchdog_task,"Watch_dog", 128, (void*)&Usart2, 1, NULL);
 

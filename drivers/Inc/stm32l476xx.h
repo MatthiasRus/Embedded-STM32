@@ -407,6 +407,8 @@ typedef struct {
 
 #define TIM3_PCLK_EN()							(RCC->APB1ENR1  |= (1 << 1))
 #define TIM3									((TIM_RegDef_t*)TIM3_BASE_ADDR)
+
+#define IWDG									((IWDG_RegDef_t*)IWDG_BASE_ADDR);
 /*	-------------------------clock enable macros for GPIOx------------------------------------*/
 
 #define GPIOA_PCLK_EN()					(RCC->AHB2ENR |= (1 << 0))

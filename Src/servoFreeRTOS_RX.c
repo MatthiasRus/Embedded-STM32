@@ -16,7 +16,7 @@
 
 static QueueHandle_t  servo_queue = NULL;
 static SemaphoreHandle_t dma_semp = NULL;
-
+static IWDG_RegDef_t *IWDG;
 static GPIO_Handle_t GpioLed;
 static USART_Handle_t Usart2;
 static Servo_command servo_cmd = {0};
@@ -25,6 +25,15 @@ static char buffer[50];
 volatile uint16_t bufferSize = 50;
 volatile int data_received = 0;
 volatile uint8_t  channel = USART2_RX_DMA_CHANNEL_NO;
+
+void IWDG_Init(void) {
+
+    IWDG->KR  = 0x5555;   // unlock
+    IWDG->PR  = 0x03;     // prescaler /32 → ~1kHz from LSI 32kHz
+    IWDG->RLR = 999;      // reload = 999 → timeout ~1000ms
+    IWDG->KR  = 0xCCCC;   // start
+    IWDG->KR  = 0xAAAA;   // first kick
+}
 
 void SystemClock_Config(void){
 	// Switch to HSI16 (16MHz) — simple and fast
@@ -84,11 +93,20 @@ void LED_confirm_task(void* pvParameter) {
     }
 }
 
+void watchdog_task(void* pvParameter){
+	USART_Handle_t* usart = (USART_Handle_t*) pvParameter;
+
+	while(1){
+		IWDG->KR  = 0xAAAA;
+		vTaskDelay(pdMS_TO_TICKS(500));
+		USART_SendString(usart, "WatchDog--HERE\r\n");
+	}
+}
 
 int main(void){
 
 	SystemClock_Config();
-
+	IWDG_Init(); // this is independent watch dog
     GpioLed.pGPIOx = GPIOA;			// LED
 
 
@@ -136,6 +154,7 @@ int main(void){
     xTaskCreate(servo_parse_task, "Servo_cmd_parse", 256, (void*)&Usart2, 3, NULL);
     xTaskCreate(servo_update_task, "Servo_Update", 256, (void*)&Usart2, 2, NULL);
     xTaskCreate(LED_confirm_task, "Led_confirmation", 128, NULL, 1, NULL);
+    xTaskCreate(watchdog_task,"Watch_dog", 128, (void*)&Usart2, 1, NULL);
 
     vTaskStartScheduler();
     while(1);

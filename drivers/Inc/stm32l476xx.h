@@ -96,6 +96,9 @@
 #define TIM2_BASE_ADDR							(PERIPH_BASE  + 0x0000)
 #define TIM3_BASE_ADDR							(PERIPH_BASE  + 0x0400)
 
+
+/*==================================Watch DOG================================================*/
+#define IWDG_BASE_ADDR							(APB1_PERIPH_BASE_ADDR + 0X3000)
 /* ---------------------peripheral register definition structures------------------------*/
 
 typedef struct{
@@ -337,6 +340,17 @@ typedef struct {
 		__vo uint32_t CSELR;
 
 }DMA_RegDef_t;
+
+
+typedef struct {
+	__vo uint32_t KR;
+	__vo uint32_t PR;
+	__vo uint32_t RLR;
+	__vo uint32_t SR;
+	__vo uint32_t WINR;
+} IWDG_RegDef_t;
+
+
 /* ----------------------------Peripheral addresses defined (GPIO_RegDef)------------------------*/
 
 #define GPIOA									((GPIO_RegDef_t*)GPIOA_BASE_ADDR)

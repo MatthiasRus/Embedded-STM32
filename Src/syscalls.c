@@ -174,3 +174,37 @@ int _execve(char *name, char **argv, char **env)
   errno = ENOMEM;
   return -1;
 }
+
+/*
+ * Micro ROS Specifics
+ */
+void* __aeabi_read_tp(void) {
+    return 0;
+}
+
+#include <time.h>
+#include "FreeRTOS.h"
+#include "task.h"
+
+int clock_gettime(clockid_t clk_id, struct timespec* tp) {
+    TickType_t ticks = xTaskGetTickCount();
+    tp->tv_sec  = ticks / 1000;
+    tp->tv_nsec = (ticks % 1000) * 1000000;
+    return 0;
+}
+
+#include <stdint.h>
+
+uint64_t __atomic_load_8(const volatile void* ptr, int memorder){
+    return *(const volatile uint64_t*)ptr;
+}
+
+uint64_t __atomic_exchange_8(volatile void* ptr, uint64_t val, int memorder){
+    uint64_t old = *(volatile uint64_t*)ptr;
+    *(volatile uint64_t*)ptr = val;
+    return old;
+}
+
+void __atomic_store_8(volatile void* ptr, uint64_t val, int memorder){
+    *(volatile uint64_t*)ptr = val;
+}

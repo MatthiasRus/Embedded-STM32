@@ -7,6 +7,7 @@
 
 #include "microros_transport.h"
 #include "stm32l476xx.h"
+#include "stm32l476xx_usart_driver.h"
 #include "FreeRTOS.h"
 
 bool transport_open(struct uxrCustomTransport* transport){

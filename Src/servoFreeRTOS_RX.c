@@ -14,6 +14,7 @@
 #include "stm32l476xx.h"
 #include "stm32l476xx_usart_driver.h"
 #include "pca9685_driver.h"
+#include "microros_app.h"
 
 static QueueHandle_t  servo_queue = NULL;
 static SemaphoreHandle_t dma_semp = NULL;
@@ -32,8 +33,8 @@ volatile uint8_t  channel = USART2_RX_DMA_CHANNEL_NO;
 
 /*=======================================ServoTaskParameters======================================*/
 typedef struct {
-    static USART_Handle_t* usart;
-    static I2C_Handle_t*   i2c;
+     USART_Handle_t* usart;
+     I2C_Handle_t*   i2c;
 } ServoTaskParams_t;
 
 static ServoTaskParams_t servo_params;

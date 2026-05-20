@@ -11,6 +11,7 @@
 #include <sensor_msgs/msg/joint_state.h>
 
 #include "microros_transport.h"
+
 #include "FreeRTOS.h"
 #include "task.h"
 
@@ -40,9 +41,9 @@ void microros_task(void* args){
 
 	rcl_node_init(&node, "arm_mros_node", "/arm", &context, &node_options);
 
-	const rosidl_message_type_support_t js_type_support = ROSIDL_GET_MSG_TYPE_SUPPORT(sensor_msgs,msg,JointState);
+	const rosidl_message_type_support_t* js_type_support = ROSIDL_GET_MSG_TYPE_SUPPORT(sensor_msgs,msg,JointState);
 
-	rclc_publisher_init_default(&pub, &node, &js_type_support, "/joint_states");
+	rclc_publisher_init_default(&pub, &node, js_type_support, "/joint_states");
 
 	rclc_executor_init(&exec, &context, 1, &allocator);
 

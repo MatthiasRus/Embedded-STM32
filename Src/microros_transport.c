@@ -7,6 +7,7 @@
 
 #include "microros_transport.h"
 #include "stm32l476xx.h"
+#include "FreeRTOS.h"
 
 bool transport_open(struct uxrCustomTransport* transport){
 	if (RCC->APB1ENR1 & (1 << 17)){

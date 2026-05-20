@@ -184,8 +184,9 @@ int main(void){
 
     xTaskCreate(servo_parse_task, "Servo_cmd_parse", 256, (void*)&Usart2, 3, NULL);
     xTaskCreate(servo_update_task, "Servo_Update", 256, (void*)&servo_params, 2, NULL);
-    xTaskCreate(LED_confirm_task, "Led_confirmation", 128, NULL, 1, NULL);
-    xTaskCreate(watchdog_task,"Watch_dog", 128, (void*)&Usart2, 1, NULL);
+    xTaskCreate(LED_confirm_task, "Led_confirmation", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
+    xTaskCreate(watchdog_task,"Watch_dog", configMINIMAL_STACK_SIZE, (void*)&Usart2, 1, NULL);
+    xTaskCreate(microros_task, "arm_js_publisher", 4000U, (void*)&Usart2, 2, NULL);
 
     vTaskStartScheduler();
     while(1);

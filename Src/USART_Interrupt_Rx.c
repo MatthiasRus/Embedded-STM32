@@ -9,7 +9,7 @@
 #include <string.h>
 
 // --- GLOBAL VARIABLES (The Bridge between Main and ISR) ---
-USART_Handle_t usart;
+static USART_Handle_t usart;
 char rx_buffer[50];
 volatile uint8_t rx_index = 0;
 volatile uint8_t msg_ready = 0;

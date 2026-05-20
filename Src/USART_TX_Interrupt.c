@@ -10,7 +10,7 @@
 #include "stm32l476xx_usart_driver.h"
 
 static USART_IRQ_TX_State_t tx_state = {0};
-USART_Handle_t usart;
+static USART_Handle_t usart;
 char* buf;
 
 int main(void){

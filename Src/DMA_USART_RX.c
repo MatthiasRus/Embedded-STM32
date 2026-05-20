@@ -10,10 +10,10 @@
 #include <string.h>
 
 // GLOBAL Definition
-USART_Handle_t usart2;
-DMAx_Handle_t  dma1;
-Servo_command cmd = {0};
-uint8_t channel = USART2_RX_DMA_CHANNEL_NO;
+static USART_Handle_t usart2;
+static DMAx_Handle_t  dma1;
+static Servo_command cmd = {0};
+static uint8_t channel = USART2_RX_DMA_CHANNEL_NO;
 static int8_t bufferSize = 50;
 char buffer[50];
 volatile uint8_t cmd_ready = 0;

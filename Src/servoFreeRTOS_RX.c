@@ -32,8 +32,8 @@ volatile uint8_t  channel = USART2_RX_DMA_CHANNEL_NO;
 
 /*=======================================ServoTaskParameters======================================*/
 typedef struct {
-    USART_Handle_t* usart;
-    I2C_Handle_t*   i2c;
+    static USART_Handle_t* usart;
+    static I2C_Handle_t*   i2c;
 } ServoTaskParams_t;
 
 static ServoTaskParams_t servo_params;

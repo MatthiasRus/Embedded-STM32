@@ -8,6 +8,13 @@
 #ifndef MICROROS_TRANSPORT_H_
 #define MICROROS_TRANSPORT_H_
 
+
+#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
+#include <uxr/client/transport.h>
+
+
 bool transport_open(struct uxrCustomTransport* transport);
 bool transport_close(struct uxrCustomTransport* transport);
 
